@@ -1,0 +1,22 @@
+# Day1 骨架依赖。版本先用下限锁定，Day10 会用 pip freeze 冻结成精确版本再写进 README。
+
+# --- Web 服务 ---
+fastapi>=0.115
+uvicorn[standard]>=0.32
+
+# --- LLM 客户端（OpenAI 兼容，DeepSeek / 硅基流动 / 通义 / Ollama 共用） ---
+openai>=1.60
+httpx>=0.27
+
+# --- 配置 ---
+pydantic>=2.9
+pydantic-settings>=2.6
+python-dotenv>=1.0
+
+# --- 演示前端 ---
+streamlit>=1.40
+
+# --- RAG：向量库 + 关键词检索 ---
+chromadb>=0.5.20
+rank-bm25>=0.2.2
+jieba>=0.42.1
