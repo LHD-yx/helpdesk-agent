@@ -85,6 +85,7 @@
 | 主 LLM | DeepSeek-chat | Ollama 本地 7B | 本机无 NVIDIA 显卡，7B 在 CPU 上慢且 function calling 不稳定，会把不确定性引进核心链路 |
 | 记忆 | 自研 SessionStore | LangChain Memory / Redis | 抽象够薄、便于讲清实现；Redis 需要额外部署 |
 | 前端 | Streamlit | Gradio / 手写 HTML | 单文件、能展示中间步骤与引用来源；不值得为演示花时间写 HTML |
+| 错误处理 | 错误二分：只有"服务不可用"才降级 | 统一 except Exception 后降级 | 400/401/403/404 属于"我的问题"，换供应商也一样失败；一律降级会让配错被一次"成功"的降级掩盖（模型名写错 → 静默降级 → 返回完全正常的答案，故障零暴露） |
 
 ## 5. 验收清单（Day14 自查）
 
