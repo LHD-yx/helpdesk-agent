@@ -95,14 +95,6 @@ class Settings(BaseSettings):
         """只有供应商名和 key 都配了，才认为降级可用。"""
         return bool(self.llm_fallback_provider and self.llm_fallback_api_key)
 
-    @property
-    def fallback_base_url(self) -> str:
-        return preset_for(self.llm_fallback_provider)["base_url"]
-
-    @property
-    def fallback_model(self) -> str:
-        return preset_for(self.llm_fallback_provider)["model"]
-
     def validate_providers(self) -> None:
         """启动即校验供应商配置：配错了立刻炸，不要等第一次调用模型才发现。
 
