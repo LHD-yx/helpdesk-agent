@@ -79,6 +79,7 @@ class LLMProvider(Protocol):
         messages: list[dict[str, Any]],
         *,
         temperature: float | None = None,
+        max_tokens: int | None = None,
         tools: list[dict[str, Any]] | None = None,
         response_format: dict[str, Any] | None = None,
     ) -> LLMResult: ...

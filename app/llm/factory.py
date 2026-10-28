@@ -67,6 +67,7 @@ class LLMService:
         messages: list[dict[str, Any]],
         *,
         temperature: float | None = None,
+        max_tokens: int | None = None,
         tools: list[dict[str, Any]] | None = None,
         response_format: dict[str, Any] | None = None,
     ) -> LLMResult:
@@ -74,6 +75,7 @@ class LLMService:
             result = self.primary.chat(
                 messages,
                 temperature=temperature,
+                max_tokens=max_tokens,
                 tools=tools,
                 response_format=response_format,
             )
@@ -92,6 +94,7 @@ class LLMService:
                 result = self.fallback.chat(
                     messages,
                     temperature=temperature,
+                    max_tokens=max_tokens,
                     tools=tools,
                     response_format=response_format,
                 )

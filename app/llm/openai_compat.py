@@ -60,6 +60,7 @@ class OpenAICompatProvider:
         messages: list[dict[str, Any]],
         *,
         temperature: float | None = None,
+        max_tokens: int | None = None,
         tools: list[dict[str, Any]] | None = None,
         response_format: dict[str, Any] | None = None,
     ) -> LLMResult:
@@ -68,6 +69,8 @@ class OpenAICompatProvider:
             "messages": messages,
             "temperature": self.default_temperature if temperature is None else temperature,
         }
+        if max_tokens is not None:
+            payload["max_tokens"] = max_tokens
         if tools:
             payload["tools"] = tools
             payload["tool_choice"] = "auto"
