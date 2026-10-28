@@ -10,13 +10,31 @@ from __future__ import annotations
 import time
 
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import JSONResponse
 
+from app.agent.orchestrator import handle
 from app.config import BASE_DIR, get_settings
 from app.llm import get_llm_service
 from app.llm.base import LLMRequestError, LLMUnavailableError
-from app.schemas import HealthResponse
+from app.schemas import ChatRequest, ChatResponse, HealthResponse
 
-app = FastAPI(title="HelpDesk Agent", version="0.1.0")
+
+class UTF8JSONResponse(JSONResponse):
+    """显式声明 UTF-8。
+
+    按 RFC 8259，JSON 默认就是 UTF-8，所以不带 charset 也合规；
+    但 PowerShell 5.1 这类老客户端不看规范，会按 ISO-8859-1 解码成乱码。
+    多写这半行，兼容性换来的麻烦远大于成本。
+    """
+
+    media_type = "application/json; charset=utf-8"
+
+
+app = FastAPI(
+    title="HelpDesk Agent",
+    version="0.1.0",
+    default_response_class=UTF8JSONResponse,
+)
 
 DB_PATH = BASE_DIR / "data" / "helpdesk.db"
 
@@ -75,3 +93,9 @@ def health(
         llm_ready=llm_ready,
         llm_latency_ms=llm_latency_ms,
     )
+
+
+@app.post("/chat", response_model=ChatResponse)
+def chat(req: ChatRequest) -> ChatResponse:
+    """一次对话。D1 只做路由 + 桩分支，不接检索和工具。"""
+    return handle(req.message, req.session_id)
