@@ -74,6 +74,11 @@ def parse_result(raw: str) -> IntentResult:
 
 def apply_policy(result: IntentResult) -> IntentResult:
     """低置信度转人工；保留原置信度与原意图，方便日志和评测。"""
+    # 已经是安全出口（解析失败也会落到 HANDOFF），就不要再包一层：
+    # 否则 "路由解析失败" 会被 "低置信度 0.00，原判 handoff" 覆盖，
+    # 日志里就只剩一个毫无信息量的结论。
+    if result.intent is Intent.HANDOFF:
+        return result
     if result.confidence < CONFIDENCE_THRESHOLD:
         return IntentResult(
             intent=Intent.HANDOFF,

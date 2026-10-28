@@ -53,6 +53,13 @@ def check_low_confidence() -> None:
     assert "policy_qa" in out.reason, f"reason 应保留原意图值，实际 {out.reason!r}"
 
 
+def check_parse_failure_reason_survives() -> None:
+    """解析失败的原因必须一路传到最终结果，不能被低置信度策略二次覆盖。"""
+    out = apply_policy(parse_result("不是 JSON，也不是 JSON 对象"))
+    assert out.intent is Intent.HANDOFF, f"应转人工，实际 {out.intent}"
+    assert "解析失败" in out.reason, f"解析失败原因被覆盖了，实际 {out.reason!r}"
+
+
 def check_high_confidence() -> None:
     out = apply_policy(IntentResult(intent=Intent.TICKET_OP, confidence=0.85))
     assert out.intent is Intent.TICKET_OP, f"高置信度不该被改动，实际 {out.intent}"
@@ -64,6 +71,7 @@ CHECKS = [
     ("非法 JSON 转人工且留下原因", check_bad_json),
     ("非法枚举值转人工", check_invalid_intent),
     ("低置信度转人工并保留原值", check_low_confidence),
+    ("解析失败的原因能穿过策略层", check_parse_failure_reason_survives),
     ("高置信度保持原意图", check_high_confidence),
 ]
 
