@@ -7,7 +7,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import Any, Callable
 
 from app.llm import LLMResult, get_llm_service
 from app.tools.registry import TOOL_SCHEMAS, dispatch
@@ -44,13 +44,20 @@ def _assistant_tool_message(resp: LLMResult) -> dict[str, Any]:
     }
 
 
-def run_tool_loop(message: str, max_rounds: int = MAX_ROUNDS) -> dict[str, Any]:
+def run_tool_loop(
+    message: str,
+    max_rounds: int = MAX_ROUNDS,
+    chat: Callable[..., LLMResult] | None = None,
+) -> dict[str, Any]:
     """执行工具循环。
 
     返回 {answer, tool_calls, rounds, stopped_by}：
       stopped_by = "final_answer" 说明模型自己收口了
       stopped_by = "max_rounds"   说明轮数用完，强制收口
     """
+    # 允许注入假模型：离线测试不需要花钱，也不用等网络。
+    chat = chat or get_llm_service().chat
+
     messages: list[dict[str, Any]] = [
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": message},
@@ -58,7 +65,7 @@ def run_tool_loop(message: str, max_rounds: int = MAX_ROUNDS) -> dict[str, Any]:
     trace: list[dict[str, Any]] = []
 
     for round_no in range(1, max_rounds + 1):
-        resp = get_llm_service().chat(messages, temperature=0.0, tools=TOOL_SCHEMAS)
+        resp = chat(messages, temperature=0.0, tools=TOOL_SCHEMAS)
 
         if not resp.tool_calls:
             return {

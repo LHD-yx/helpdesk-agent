@@ -12,12 +12,11 @@ D1 的三条分支都是桩（stub）：
 from __future__ import annotations
 
 from app.agent.router import classify
+from app.agent.ticket_ops import run_tool_loop
 from app.schemas import ChatResponse, Intent
 
-STUB_ANSWERS: dict[Intent, str] = {
-    Intent.POLICY_QA: "（桩）政策分支待 D3 接入检索，今天先返回占位答案。",
-    Intent.TICKET_OP: "（桩）工单分支待 D2 接入工具，今天先返回占位答案。",
-}
+# 政策分支还是桩，等 D3 接入 RAG。
+POLICY_STUB = "（桩）政策分支待 D3 接入检索，今天先返回占位答案。"
 
 
 def handle(message: str, session_id: str = "default") -> ChatResponse:
@@ -26,8 +25,11 @@ def handle(message: str, session_id: str = "default") -> ChatResponse:
 
     if route.intent is Intent.HANDOFF:
         answer = f"这个问题需要人工协助，已为你转接。触发原因：{route.reason}"
+    elif route.intent is Intent.TICKET_OP:
+        # 真正的工具循环：模型选工具 → 执行 → 结果回灌 → 生成答案。
+        answer = run_tool_loop(message)["answer"]
     else:
-        answer = STUB_ANSWERS[route.intent]
+        answer = POLICY_STUB
 
     return ChatResponse(
         answer=answer,
