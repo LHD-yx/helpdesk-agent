@@ -77,6 +77,12 @@ class Settings(BaseSettings):
     llm_fallback_provider: str = ""
     llm_fallback_api_key: str = ""
 
+    # ---------- Embedding（RAG 用，和生成是两种能力）----------
+    embedding_base_url: str = "https://api.siliconflow.cn/v1"
+    embedding_model: str = "BAAI/bge-m3"
+    embedding_api_key: str = ""   # 留空则复用 llm_fallback_api_key
+    embedding_dim: int = 1024
+
     # ---------- 应用 ----------
     app_env: str = "dev"
     log_level: str = "INFO"
@@ -94,6 +100,11 @@ class Settings(BaseSettings):
     def has_fallback(self) -> bool:
         """只有供应商名和 key 都配了，才认为降级可用。"""
         return bool(self.llm_fallback_provider and self.llm_fallback_api_key)
+
+    @property
+    def resolved_embedding_key(self) -> str:
+        """Embedding 专用 key，没配就复用备用供应商的 key。"""
+        return self.embedding_api_key or self.llm_fallback_api_key
 
     def validate_providers(self) -> None:
         """启动即校验供应商配置：配错了立刻炸，不要等第一次调用模型才发现。
