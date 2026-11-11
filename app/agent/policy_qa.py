@@ -15,6 +15,7 @@ from app.llm import get_llm_service
 from app.rag.retriever import Hit, build_citations, retrieve
 
 NO_BASIS_ANSWER = "公司政策里没有找到相关规定，我把这个问题转给人工同事处理。"
+NO_BASIS_MARKER = "公司政策里没有找到相关规定"
 
 SYSTEM_PROMPT = """你是企业政策助手。严格遵守：
 1. 只能依据【资料】回答，不得使用资料之外的知识。
@@ -57,8 +58,19 @@ def answer(question: str) -> PolicyAnswer:
         ],
         temperature=0.1,
     )
+    answer_text = resp.content.strip()
+    if NO_BASIS_MARKER in answer_text:
+        # 检索有相似 chunk 不等于真的有依据：模型明确拒答时，
+        # 不能继续把相似 chunk 作为引用返回，否则用户会看到自相矛盾的证据。
+        return PolicyAnswer(
+            answer=answer_text,
+            citations=[],
+            top_score=hits[0].score,
+            fallback=True,
+            fallback_reason="no_policy_basis",
+        )
     return PolicyAnswer(
-        answer=resp.content.strip(),
+        answer=answer_text,
         citations=build_citations(hits),
         top_score=hits[0].score,
     )

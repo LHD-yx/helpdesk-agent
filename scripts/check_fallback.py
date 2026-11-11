@@ -11,12 +11,14 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.agent import orchestrator, policy_qa  # noqa: E402
 from app.agent.policy_qa import PolicyAnswer  # noqa: E402
 from app.agent.router import IntentResult  # noqa: E402
+from app.llm import LLMResult  # noqa: E402
 from app.schemas import ChatResponse, Intent  # noqa: E402
 
 
@@ -80,12 +82,39 @@ def check_normal_policy_default() -> None:
     print("[OK] 正常政策结果默认不标记 fallback")
 
 
+def check_policy_model_reports_no_basis() -> None:
+    class FakeService:
+        def chat(self, _messages, **_kwargs):
+            return LLMResult(content=policy_qa.NO_BASIS_ANSWER)
+
+    fake_hit = SimpleNamespace(
+        metadata={"policy_id": "P002"},
+        text="年假天数按司龄计算",
+        score=0.636,
+    )
+    original_retrieve = policy_qa.retrieve
+    original_get_service = policy_qa.get_llm_service
+    policy_qa.retrieve = lambda _question: [fake_hit]
+    policy_qa.get_llm_service = lambda: FakeService()
+    try:
+        result = policy_qa.answer("员工有育儿假吗")
+    finally:
+        policy_qa.retrieve = original_retrieve
+        policy_qa.get_llm_service = original_get_service
+
+    assert result.fallback is True
+    assert result.fallback_reason == "no_policy_basis"
+    assert result.citations == []
+    print("[OK] 模型明确无依据时清空相似引用并标记 no_policy_basis")
+
+
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     check_response_defaults()
     check_policy_no_hit()
     check_orchestrator_passthrough()
     check_normal_policy_default()
+    check_policy_model_reports_no_basis()
     print("[OK] fallback 收口检查通过")
     return 0
 

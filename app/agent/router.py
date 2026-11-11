@@ -24,6 +24,12 @@ SYSTEM_PROMPT = """你是企业服务台的意图分类器。只输出 JSON，�
 - ticket_op：查询、创建、升级工单；报修设备故障（电脑开不了机、网络断、打印机坏了等）
 - handoff：投诉、要求人工、情绪激烈、超出以上范围、无法判断
 
+边界规则：
+- 用户明确要求投诉、找人工或找负责人时，选 handoff。
+- 用户点名已有工单号，并明确要求查询、升级、加急或继续处理时，选 ticket_op；
+  即使同时表达"不满意"，也不要把工单操作改判成投诉。
+- 只有泛泛表达不满、没有工单操作请求时，才选 handoff。
+
 输出格式：
 {"intent": "<policy_qa|ticket_op|handoff>", "confidence": <0到1的小数>, "reason": "<不超过20字>"}
 
@@ -36,6 +42,8 @@ SYSTEM_PROMPT = """你是企业服务台的意图分类器。只输出 JSON，�
 输出：{"intent": "ticket_op", "confidence": 0.95, "reason": "设备故障需报修建单"}
 用户：叫你们领导来
 输出：{"intent": "handoff", "confidence": 0.9, "reason": "情绪激动要求人工"}
+用户：T1010 已经关了，我还是不满意，帮我再升级一下
+输出：{"intent": "ticket_op", "confidence": 0.92, "reason": "要求升级指定工单"}
 """
 
 
