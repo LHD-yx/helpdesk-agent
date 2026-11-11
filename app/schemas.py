@@ -46,17 +46,15 @@ class Citation(BaseModel):
 
 
 class ChatResponse(BaseModel):
-    """一次对话响应。
-
-    D1 只返回桩答案；citations / tool_trace 等字段等到真正有内容时再加，
-    不提前占位——占位字段最后往往变成没人维护的死字段。
-    """
+    """一次对话响应。"""
 
     answer: str
     intent: Intent
     confidence: float = Field(ge=0.0, le=1.0)
     session_id: str
     citations: list[Citation] = Field(default_factory=list)
+    fallback: bool = False
+    fallback_reason: str = ""
 
 
 class HealthResponse(BaseModel):

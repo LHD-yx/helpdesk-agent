@@ -1,12 +1,8 @@
-"""最小编排：路由 → 三条分支 → 统一响应。
+"""最小编排：路由 → 三条真实分支 → 统一响应。
 
-D1 的三条分支都是桩（stub）：
-  policy_qa → D3 接 RAG
-  ticket_op → D2 接 Function Calling
-  handoff   → 已经可用（转人工不需要业务数据）
-
-为什么要先做桩：先把 HTTP → 路由 → 分支 → 返回 这条细线打通，
-后面每接一块真业务，只换对应的桩，不用动链路结构。
+policy_qa 接 RAG，ticket_op 接 Function Calling，handoff 直接返回人工提示。
+分支内部的降级通过 fallback / fallback_reason 传给调用方，不覆盖路由原判的
+intent，保证评测测到的是真实路由结果。
 """
 
 from __future__ import annotations
@@ -21,6 +17,8 @@ def handle(message: str, session_id: str = "default") -> ChatResponse:
     """一次对话的主流程。今天是同步的，D5 前端接上时可能需要改成异步。"""
     route = classify(message)
     citations: list[Citation] = []
+    fallback = False
+    fallback_reason = ""
 
     if route.intent is Intent.HANDOFF:
         answer = f"这个问题需要人工协助，已为你转接。触发原因：{route.reason}"
@@ -31,6 +29,8 @@ def handle(message: str, session_id: str = "default") -> ChatResponse:
         result = policy_answer(message)
         answer = result.answer
         citations = [Citation(**c) for c in result.citations]
+        fallback = result.fallback
+        fallback_reason = result.fallback_reason
 
     return ChatResponse(
         answer=answer,
@@ -38,4 +38,6 @@ def handle(message: str, session_id: str = "default") -> ChatResponse:
         confidence=route.confidence,
         session_id=session_id,
         citations=citations,
+        fallback=fallback,
+        fallback_reason=fallback_reason,
     )

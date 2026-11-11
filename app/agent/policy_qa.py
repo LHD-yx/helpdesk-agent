@@ -28,6 +28,8 @@ class PolicyAnswer:
     answer: str
     citations: list[dict[str, Any]] = field(default_factory=list)
     top_score: float = 0.0
+    fallback: bool = False
+    fallback_reason: str = ""
 
 
 def _context(hits: list[Hit]) -> str:
@@ -37,7 +39,13 @@ def _context(hits: list[Hit]) -> str:
 def answer(question: str) -> PolicyAnswer:
     hits = retrieve(question)
     if not hits:
-        return PolicyAnswer(answer=NO_BASIS_ANSWER, citations=[], top_score=0.0)
+        return PolicyAnswer(
+            answer=NO_BASIS_ANSWER,
+            citations=[],
+            top_score=0.0,
+            fallback=True,
+            fallback_reason="no_policy_hit",
+        )
 
     resp = get_llm_service().chat(
         [
