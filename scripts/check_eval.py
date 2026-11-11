@@ -252,12 +252,97 @@ def _check_collection(records: list[dict[str, Any]]) -> list[str]:
     return errors
 
 
+def _check_metric_algorithms() -> list[str]:
+    """用固定合成数据验证指标定义，不访问网络或业务数据库。"""
+    from evals.run_eval import (  # 延迟导入，避免检查脚本启动时初始化业务单例。
+        percentile_nearest_rank,
+        retrieval_matches,
+        summarize_results,
+        tool_trace_matches,
+    )
+
+    errors: list[str] = []
+    fake_results = [
+        {
+            "category": "policy",
+            "expect_no_basis": False,
+            "checks": {"intent_ok": True, "tool_ok": None, "retrieval_ok": True},
+            "latency_ms": 10.0,
+            "token_usage": {"prompt_tokens": 3, "completion_tokens": 1},
+            "fallback": True,
+        },
+        {
+            "category": "ticket",
+            "expect_no_basis": False,
+            "checks": {"intent_ok": True, "tool_ok": False, "retrieval_ok": None},
+            "latency_ms": 20.0,
+            "token_usage": {"prompt_tokens": 2, "completion_tokens": 2},
+            "fallback": False,
+        },
+        {
+            "category": "handoff",
+            "expect_no_basis": False,
+            "checks": {"intent_ok": False, "tool_ok": None, "retrieval_ok": None},
+            "latency_ms": 30.0,
+            "token_usage": {"prompt_tokens": 5, "completion_tokens": 1},
+            "fallback": False,
+        },
+    ]
+    summary = summarize_results(fake_results)
+
+    checks = [
+        (summary["intent"]["correct"] == 2 and summary["intent"]["total"] == 3,
+         "意图准确率分母或命中数错误"),
+        (summary["tool"]["correct"] == 0 and summary["tool"]["total"] == 1,
+         "工具正确率分母或命中数错误"),
+        (summary["retrieval"]["correct"] == 1
+         and summary["retrieval"]["total"] == 1,
+         "检索命中率分母或命中数错误"),
+        (percentile_nearest_rank([30.0, 10.0, 20.0], 50) == 20.0,
+         "P50 nearest-rank 算法错误"),
+        (percentile_nearest_rank([30.0, 10.0, 20.0], 95) == 30.0,
+         "P95 nearest-rank 算法错误"),
+        (summary["tokens"]["prompt_total"] == 10
+         and summary["tokens"]["completion_total"] == 4
+         and summary["tokens"]["total"] == 14,
+         "输入/输出 token 汇总错误"),
+        (summary["fallback"]["count"] == 1
+         and summary["fallback"]["rate"] == 1 / 3,
+         "fallback 转人工率统计错误"),
+    ]
+    for passed, message in checks:
+        if not passed:
+            errors.append(message)
+
+    trace = [
+        {
+            "name": "escalate_ticket",
+            "arguments": '{"ticket_id": "T1005", "reason": "影响演示"}',
+        }
+    ]
+    if not tool_trace_matches(trace, "escalate_ticket", {"ticket_id": "T1005"}):
+        errors.append("工具名 + 关键参数匹配算法错误")
+    if tool_trace_matches(trace, "get_ticket", {"ticket_id": "T1005"}):
+        errors.append("工具名不同却被判为正确")
+
+    no_basis = {
+        "expect_no_basis": True,
+        "expected_policy": None,
+    }
+    if not retrieval_matches(no_basis, []):
+        errors.append("无答案样本在零引用时未判为正确")
+    if retrieval_matches(no_basis, [{"policy_id": "P001"}]):
+        errors.append("无答案样本制造伪引用却未被判错")
+    return errors
+
+
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     records, errors = _load_records(TESTSET_PATH)
     for record in records:
         errors.extend(_check_record(record))
     errors.extend(_check_collection(records))
+    errors.extend(_check_metric_algorithms())
 
     if errors:
         print(f"[FAIL] 评测集检查发现 {len(errors)} 个问题：")
@@ -285,6 +370,7 @@ def main() -> int:
         f"escalate_ticket {tools['escalate_ticket']}"
     )
     print("[OK] 工单初始数据前提与 seed.py 一致")
+    print("[OK] 指标算法：意图 / 工具 / 检索 / P50-P95 / token / fallback")
     print("[OK] 评测集检查通过，共 20 条")
     return 0
 
