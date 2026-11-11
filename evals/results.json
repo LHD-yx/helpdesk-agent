@@ -1,0 +1,1473 @@
+{
+  "metadata": {
+    "sampled_at": "2026-11-11T14:50:53+08:00",
+    "timezone": "Asia/Shanghai",
+    "testset": "evals\\testset.jsonl",
+    "testset_size": 20,
+    "sample_rounds": 1,
+    "configured_model": "deepseek-chat",
+    "provider": "deepseek",
+    "embedding_model": "BAAI/bge-m3",
+    "rag_chunks": 47,
+    "database_reset": true
+  },
+  "summary": {
+    "intent": {
+      "correct": 19,
+      "total": 20,
+      "rate": 0.95
+    },
+    "tool": {
+      "correct": 5,
+      "total": 6,
+      "rate": 0.8333333333333334
+    },
+    "retrieval": {
+      "correct": 7,
+      "total": 8,
+      "rate": 0.875,
+      "answerable_correct": 6,
+      "answerable_total": 6,
+      "no_basis_correct": 1,
+      "no_basis_total": 2
+    },
+    "latency_ms": {
+      "p50": 1942.443700041622,
+      "p95": 4333.225899841636,
+      "method": "nearest-rank"
+    },
+    "tokens": {
+      "prompt_total": 20926,
+      "completion_total": 2428,
+      "total": 23354,
+      "prompt_mean": 1046.3,
+      "completion_mean": 121.4,
+      "total_mean": 1167.7,
+      "source": "API usage，累计全部路由/政策/工具循环 LLM 调用"
+    },
+    "fallback": {
+      "available": false,
+      "count": null,
+      "rate": null
+    }
+  },
+  "results": [
+    {
+      "id": "E01",
+      "category": "policy",
+      "message": "出差住宿一晚最多能报多少钱？",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "policy_qa",
+        "tool": null,
+        "tool_args": {},
+        "policy": "P001",
+        "no_basis": false
+      },
+      "intent": "policy_qa",
+      "confidence": 0.96,
+      "answer": "住宿费上限取决于职级和城市：普通员工一线城市 450 元/晚、二线城市 350 元/晚、其他城市 280 元/晚；主管/经理一线城市 600 元/晚、二线城市 480 元/晚、其他城市 380 元/晚；总监及以上一线城市 800 元/晚、二线城市 650 元/晚、其他城市 500 元/晚 [P001]。超出上限部分由个人承担 [P001]。因展会、大型会议导致当地酒店价格普遍上涨的，须提前报备并经部门负责人书面同意后可上浮不超过 30% [P001]。",
+      "citations": [
+        {
+          "policy_id": "P001",
+          "title": "差旅报销标准",
+          "section": "三、住宿标准",
+          "source_file": "P001-travel-expense.md",
+          "snippet": "住宿费按出差目的城市分档、按实际住宿天数据实报销，上限为：普通员工在一线城市每晚 450 元、二线城市 350 元、其他城市 280 元；主管及经理在一线城市每晚 600 元；总监及以上在一线城市每晚 800 元。超出上限的部分由个人承担。",
+          "score": 0.795
+        },
+        {
+          "policy_id": "P001",
+          "title": "差旅报销标准",
+          "section": "四、交通标准",
+          "source_file": "P001-travel-expense.md",
+          "snippet": "飞机一律乘坐经济舱，航程超过 4 小时时总监及以上可乘坐公务舱。高铁及动车乘坐二等座，总监及以上可乘坐一等座。市内交通据实报销，单日上限 100 元。自驾出差的，按每公里 1.2 元报销燃油及过路费，须提前在出差申请中报备路线。",
+          "score": 0.698
+        },
+        {
+          "policy_id": "P001",
+          "title": "差旅报销标准",
+          "section": "七、常见问题 > 住宿超出标准了怎么办",
+          "source_file": "P001-travel-expense.md",
+          "snippet": "超出上限的部分由个人承担，公司只报销标准内的金额。如果是因展会、会议导致当地酒店普遍涨价，须在预订前报备并取得部门负责人书面同意，可上浮不超过 30%。",
+          "score": 0.678
+        },
+        {
+          "policy_id": "P001",
+          "title": "差旅报销标准",
+          "section": "五、餐补标准",
+          "source_file": "P001-travel-expense.md",
+          "snippet": "出差期间餐补按每人每天 100 元计发，不足一天按一天计算，无需提供发票。出差期间如已由公司或客户统一安排用餐，当日餐补不再发放。",
+          "score": 0.639
+        }
+      ],
+      "tool_trace": [],
+      "latency_ms": 2438.532999716699,
+      "token_usage": {
+        "prompt_tokens": 841,
+        "completion_tokens": 168,
+        "total_tokens": 1009,
+        "llm_calls": 2
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 310,
+          "completion_tokens": 25,
+          "latency_ms": 1061.0687001608312
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 531,
+          "completion_tokens": 143,
+          "latency_ms": 1222.1015002578497
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": true
+      },
+      "error": null
+    },
+    {
+      "id": "E02",
+      "category": "policy",
+      "message": "出差结束后，报销单要在多少个工作日内提交？",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "policy_qa",
+        "tool": null,
+        "tool_args": {},
+        "policy": "P001",
+        "no_basis": false
+      },
+      "intent": "policy_qa",
+      "confidence": 0.96,
+      "answer": "出差结束后须在 15 个工作日内提交报销单 [P001]。",
+      "citations": [
+        {
+          "policy_id": "P001",
+          "title": "差旅报销标准",
+          "section": "六、报销流程与时限",
+          "source_file": "P001-travel-expense.md",
+          "snippet": "出差结束后须在 15 个工作日内提交报销单，附出差申请单、发票及行程凭证。逾期提交的，须由部门负责人签字说明原因后方可受理。报销单经直属主管审批、财务复核后，于每月 15 日和月末统一打款。",
+          "score": 0.82
+        },
+        {
+          "policy_id": "P001",
+          "title": "差旅报销标准",
+          "section": "七、常见问题 > 出差结束后多久内必须提交报销",
+          "source_file": "P001-travel-expense.md",
+          "snippet": "15 个工作日内。逾期需部门负责人签字说明原因。",
+          "score": 0.796
+        },
+        {
+          "policy_id": "P001",
+          "title": "差旅报销标准",
+          "section": "二、出差审批",
+          "source_file": "P001-travel-expense.md",
+          "snippet": "员工出差前须在 OA 系统提交出差申请，注明出差事由、目的地、起止日期和预计费用，经直属主管审批后方可执行。未审批先出差的，差旅费用原则上不予报销；确有紧急情况的，须在返回后 3 个工作日内补办审批并说明原因。",
+          "score": 0.739
+        },
+        {
+          "policy_id": "P001",
+          "title": "差旅报销标准",
+          "section": "四、交通标准",
+          "source_file": "P001-travel-expense.md",
+          "snippet": "飞机一律乘坐经济舱，航程超过 4 小时时总监及以上可乘坐公务舱。高铁及动车乘坐二等座，总监及以上可乘坐一等座。市内交通据实报销，单日上限 100 元。自驾出差的，按每公里 1.2 元报销燃油及过路费，须提前在出差申请中报备路线。",
+          "score": 0.669
+        }
+      ],
+      "tool_trace": [],
+      "latency_ms": 1827.4819999933243,
+      "token_usage": {
+        "prompt_tokens": 695,
+        "completion_tokens": 42,
+        "total_tokens": 737,
+        "llm_calls": 2
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 313,
+          "completion_tokens": 26,
+          "latency_ms": 920.8220997825265
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 382,
+          "completion_tokens": 16,
+          "latency_ms": 803.6403995938599
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": true
+      },
+      "error": null
+    },
+    {
+      "id": "E03",
+      "category": "policy",
+      "message": "入职满一年以后每年有几天年假？",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "policy_qa",
+        "tool": null,
+        "tool_args": {},
+        "policy": "P002",
+        "no_basis": false
+      },
+      "intent": "policy_qa",
+      "confidence": 0.96,
+      "answer": "入职满1年不满3年的，每年5天年假 [P002]。",
+      "citations": [
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "二、年假天数",
+          "source_file": "P002-leave.md",
+          "snippet": "年假天数按累计司龄计算：入职满 1 年不满 3 年的，每年 5 天；满 3 年不满 5 年的，每年 7 天；满 5 年不满 10 年的，每年 10 天；满 10 年及以上的，每年 15 天。司龄以劳动合同签订日期起算，当年入职的按剩余月份折",
+          "score": 0.753
+        },
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "三、年假申请与审批",
+          "source_file": "P002-leave.md",
+          "snippet": "年假须提前 3 个工作日在 OA 系统提交申请，由直属主管审批。连续休假 5 天及以上的，须经部门负责人审批。年假原则上应避开业务高峰期，同一团队同期休假人数不得超过该团队人数的三分之一。",
+          "score": 0.665
+        },
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "一、适用范围",
+          "source_file": "P002-leave.md",
+          "snippet": "本规则适用于与公司签订劳动合同的全体正式员工。试用期员工同样享有年假，但须转正后方可申请使用。实习生不适用年假制度，按实习协议约定休假。",
+          "score": 0.65
+        },
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "年假与调休规则",
+          "source_file": "P002-leave.md",
+          "snippet": "| 项目 | 内容 |\n| --- | --- |\n| 文件编号 | P002 |\n| 版本 | v1 |\n| 生效日期 | 2024-07-01 |\n| 适用范围 | 全公司 |\n| 归口部门 | 人事部 |",
+          "score": 0.633
+        }
+      ],
+      "tool_trace": [],
+      "latency_ms": 1769.3384997546673,
+      "token_usage": {
+        "prompt_tokens": 806,
+        "completion_tokens": 43,
+        "total_tokens": 849,
+        "llm_calls": 2
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 312,
+          "completion_tokens": 26,
+          "latency_ms": 924.5182001031935
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 494,
+          "completion_tokens": 17,
+          "latency_ms": 697.3852002993226
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": true
+      },
+      "error": null
+    },
+    {
+      "id": "E04",
+      "category": "policy",
+      "message": "法定节假日加班怎么折算调休？",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "policy_qa",
+        "tool": null,
+        "tool_args": {},
+        "policy": "P002",
+        "no_basis": false
+      },
+      "intent": "policy_qa",
+      "confidence": 0.95,
+      "answer": "法定节假日加班按 1:2 折算调休，且加班须提前在 OA 提交申请并获批，否则不计入调休 [P002]。",
+      "citations": [
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "七、常见问题 > 加班怎么折算调休",
+          "source_file": "P002-leave.md",
+          "snippet": "工作日和周末加班按 1:1 折算，法定节假日加班按 1:2 折算。加班需提前在 OA 申请并获批，否则不计入调休。",
+          "score": 0.824
+        },
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "四、加班与调休",
+          "source_file": "P002-leave.md",
+          "snippet": "工作日加班和周末加班按 1:1 折算调休，法定节假日加班按 1:2 折算调休。加班须提前在 OA 提交加班申请并获批准，未经审批的加班不计入调休时长。调休以小时为单位累计，最小使用单位为 1 小时。",
+          "score": 0.804
+        },
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "五、调休有效期",
+          "source_file": "P002-leave.md",
+          "snippet": "调休须在当年 12 月 31 日前使用完毕，逾期清零，不折现、不结转。因公司原因导致无法安排调休的，由部门负责人书面说明后，可顺延至次年 3 月 31 日。",
+          "score": 0.648
+        },
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "二、年假天数",
+          "source_file": "P002-leave.md",
+          "snippet": "年假天数按累计司龄计算：入职满 1 年不满 3 年的，每年 5 天；满 3 年不满 5 年的，每年 7 天；满 5 年不满 10 年的，每年 10 天；满 10 年及以上的，每年 15 天。司龄以劳动合同签订日期起算，当年入职的按剩余月份折",
+          "score": 0.627
+        }
+      ],
+      "tool_trace": [],
+      "latency_ms": 2068.405999802053,
+      "token_usage": {
+        "prompt_tokens": 824,
+        "completion_tokens": 61,
+        "total_tokens": 885,
+        "llm_calls": 2
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 310,
+          "completion_tokens": 27,
+          "latency_ms": 847.5742000155151
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 514,
+          "completion_tokens": 34,
+          "latency_ms": 952.5037002749741
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": true
+      },
+      "error": null
+    },
+    {
+      "id": "E05",
+      "category": "policy",
+      "message": "单笔采购8000元需要谁审批？",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "policy_qa",
+        "tool": null,
+        "tool_args": {},
+        "policy": "P003",
+        "no_basis": false
+      },
+      "intent": "policy_qa",
+      "confidence": 0.95,
+      "answer": "单笔 8000 元属于“5000 元以上”，由分管副总审批 [P003]。同时还需至少 3 家供应商报价并说明选择理由 [P003]。",
+      "citations": [
+        {
+          "policy_id": "P003",
+          "title": "办公用品采购流程",
+          "section": "二、审批权限",
+          "source_file": "P003-procurement.md",
+          "snippet": "采购审批按单笔金额分档：单笔 500 元以下的，由直属主管审批；单笔 500 元至 5000 元的，由部门负责人审批；单笔 5000 元以上的，由分管副总审批。同一供应商、同一周内拆分成多笔规避审批的，按合计金额重新定档。\n\n| 单笔金额 ",
+          "score": 0.757
+        },
+        {
+          "policy_id": "P003",
+          "title": "办公用品采购流程",
+          "section": "六、常见问题 > 6000 元的设备谁审批",
+          "source_file": "P003-procurement.md",
+          "snippet": "单笔 5000 元以上由分管副总审批，同时需要至少 3 家供应商报价并说明选择理由。",
+          "score": 0.752
+        },
+        {
+          "policy_id": "P003",
+          "title": "办公用品采购流程",
+          "section": "六、常见问题 > 买一个 300 元的键盘需要谁审批",
+          "source_file": "P003-procurement.md",
+          "snippet": "单笔 500 元以下由直属主管审批，不需要部门负责人签字。",
+          "score": 0.715
+        },
+        {
+          "policy_id": "P003",
+          "title": "办公用品采购流程",
+          "section": "三、比价要求",
+          "source_file": "P003-procurement.md",
+          "snippet": "单笔金额 2000 元及以上的采购，须取得至少 3 家供应商的书面报价并留存比价记录。单笔 5000 元以上的，除比价外还须说明选择理由。",
+          "score": 0.663
+        }
+      ],
+      "tool_trace": [],
+      "latency_ms": 1942.443700041622,
+      "token_usage": {
+        "prompt_tokens": 704,
+        "completion_tokens": 66,
+        "total_tokens": 770,
+        "llm_calls": 2
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 312,
+          "completion_tokens": 27,
+          "latency_ms": 1030.874999705702
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 392,
+          "completion_tokens": 39,
+          "latency_ms": 810.3975998237729
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": true
+      },
+      "error": null
+    },
+    {
+      "id": "E06",
+      "category": "policy",
+      "message": "申请测试环境数据库权限需要谁审批，权限有效多久？",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "policy_qa",
+        "tool": null,
+        "tool_args": {},
+        "policy": "P004",
+        "no_basis": false
+      },
+      "intent": "policy_qa",
+      "confidence": 0.95,
+      "answer": "公司政策里没有找到相关规定。\n\n资料中只涉及普通业务系统、核心系统和生产数据库权限的审批要求 [P004]，未提及“测试环境数据库权限”的审批人或有效期。",
+      "citations": [
+        {
+          "policy_id": "P004",
+          "title": "信息系统账号与权限管理",
+          "section": "四、审批要求",
+          "source_file": "P004-it-account.md",
+          "snippet": "普通业务系统权限由直属主管审批。核心系统权限须由直属主管和该系统负责人共同审批。生产数据库权限须双签：直属主管签字加 IT 部负责人签字，并注明使用场景和预计使用时长。",
+          "score": 0.672
+        },
+        {
+          "policy_id": "P004",
+          "title": "信息系统账号与权限管理",
+          "section": "七、常见问题 > 生产数据库权限需要谁审批",
+          "source_file": "P004-it-account.md",
+          "snippet": "需要双签：直属主管和 IT 部负责人共同签字，并注明使用场景和预计使用时长。",
+          "score": 0.654
+        },
+        {
+          "policy_id": "P004",
+          "title": "信息系统账号与权限管理",
+          "section": "三、权限分级",
+          "source_file": "P004-it-account.md",
+          "snippet": "系统权限分为三级：普通业务系统权限（查询、编辑日常业务数据）；核心系统权限（财务、人事、采购等敏感系统）；生产数据库权限（可直接读写生产环境数据）。三级权限的审批要求逐级提高。\n\n| 权限级别 | 覆盖范围 | 审批要求 |\n| --- |",
+          "score": 0.603
+        },
+        {
+          "policy_id": "P004",
+          "title": "信息系统账号与权限管理",
+          "section": "七、常见问题 > 实习生可以申请系统权限吗",
+          "source_file": "P004-it-account.md",
+          "snippet": "可以，但仅限于岗位必需的普通业务系统权限，且须由直属主管审批，有效期不超过实习期。",
+          "score": 0.602
+        }
+      ],
+      "tool_trace": [],
+      "latency_ms": 2072.5003997795284,
+      "token_usage": {
+        "prompt_tokens": 711,
+        "completion_tokens": 68,
+        "total_tokens": 779,
+        "llm_calls": 2
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 315,
+          "completion_tokens": 28,
+          "latency_ms": 851.2814999558032
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 396,
+          "completion_tokens": 40,
+          "latency_ms": 1073.9303003065288
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": true
+      },
+      "error": null
+    },
+    {
+      "id": "E07",
+      "category": "policy",
+      "message": "公司会给员工发搬家补贴吗？",
+      "expect_no_basis": true,
+      "expected": {
+        "intent": "policy_qa",
+        "tool": null,
+        "tool_args": {},
+        "policy": null,
+        "no_basis": true
+      },
+      "intent": "policy_qa",
+      "confidence": 0.9,
+      "answer": "公司政策里没有找到相关规定，我把这个问题转给人工同事处理。",
+      "citations": [],
+      "tool_trace": [],
+      "latency_ms": 935.088699683547,
+      "token_usage": {
+        "prompt_tokens": 310,
+        "completion_tokens": 26,
+        "total_tokens": 336,
+        "llm_calls": 1
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 310,
+          "completion_tokens": 26,
+          "latency_ms": 823.0305002070963
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": true
+      },
+      "error": null
+    },
+    {
+      "id": "E08",
+      "category": "policy",
+      "message": "员工每年能休几天育儿假？",
+      "expect_no_basis": true,
+      "expected": {
+        "intent": "policy_qa",
+        "tool": null,
+        "tool_args": {},
+        "policy": null,
+        "no_basis": true
+      },
+      "intent": "policy_qa",
+      "confidence": 0.96,
+      "answer": "公司政策里没有找到相关规定。",
+      "citations": [
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "二、年假天数",
+          "source_file": "P002-leave.md",
+          "snippet": "年假天数按累计司龄计算：入职满 1 年不满 3 年的，每年 5 天；满 3 年不满 5 年的，每年 7 天；满 5 年不满 10 年的，每年 10 天；满 10 年及以上的，每年 15 天。司龄以劳动合同签订日期起算，当年入职的按剩余月份折",
+          "score": 0.636
+        },
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "三、年假申请与审批",
+          "source_file": "P002-leave.md",
+          "snippet": "年假须提前 3 个工作日在 OA 系统提交申请，由直属主管审批。连续休假 5 天及以上的，须经部门负责人审批。年假原则上应避开业务高峰期，同一团队同期休假人数不得超过该团队人数的三分之一。",
+          "score": 0.591
+        },
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "七、常见问题 > 请假要提前几天申请",
+          "source_file": "P002-leave.md",
+          "snippet": "年假提前 3 个工作日；连续休假 5 天及以上还需部门负责人审批。",
+          "score": 0.559
+        },
+        {
+          "policy_id": "P002",
+          "title": "年假与调休规则",
+          "section": "年假与调休规则",
+          "source_file": "P002-leave.md",
+          "snippet": "| 项目 | 内容 |\n| --- | --- |\n| 文件编号 | P002 |\n| 版本 | v1 |\n| 生效日期 | 2024-07-01 |\n| 适用范围 | 全公司 |\n| 归口部门 | 人事部 |",
+          "score": 0.559
+        }
+      ],
+      "tool_trace": [],
+      "latency_ms": 2180.5900000035763,
+      "token_usage": {
+        "prompt_tokens": 789,
+        "completion_tokens": 32,
+        "total_tokens": 821,
+        "llm_calls": 2
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 310,
+          "completion_tokens": 25,
+          "latency_ms": 909.187899902463
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 479,
+          "completion_tokens": 7,
+          "latency_ms": 1057.5682003982365
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": false
+      },
+      "error": null
+    },
+    {
+      "id": "E09",
+      "category": "ticket",
+      "message": "帮我查一下工单 T1001 现在处理到哪一步了。",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "ticket_op",
+        "tool": "get_ticket",
+        "tool_args": {
+          "ticket_id": "T1001"
+        },
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "ticket_op",
+      "confidence": 0.95,
+      "answer": "工单 T1001 目前的状态如下：\n\n- **标题**：3楼打印机无法连接（办公室3楼打印机显示离线，重启打印机和电脑都无效）\n- **当前状态**：处理中（in_progress）\n- **优先级**：高\n- **分类**：IT\n- **提交人**：陈磊\n- **处理人**：刘洋\n- **创建时间**：2026-10-08 09:12\n- **最近更新**：2026-10-09 14:30\n- **是否升级**：未升级\n\n也就是说，这张工单已经由刘洋接手，正在处理中，最近一次更新是 10 月 9 日下午。如果需要加急或催办，可以告诉我，我帮你升级这张工单。",
+      "citations": [],
+      "tool_trace": [
+        {
+          "name": "get_ticket",
+          "arguments": "{\"ticket_id\": \"T1001\"}",
+          "result": {
+            "ok": true,
+            "ticket": {
+              "ticket_id": "T1001",
+              "title": "3楼打印机无法连接",
+              "description": "办公室3楼打印机显示离线，重启打印机和电脑都无效",
+              "status": "in_progress",
+              "priority": "high",
+              "category": "IT",
+              "requester_id": "E005",
+              "assignee_id": "E006",
+              "created_at": "2026-10-08 09:12",
+              "updated_at": "2026-10-09 14:30",
+              "escalated_at": null,
+              "escalation_reason": null,
+              "requester_name": "陈磊",
+              "assignee_name": "刘洋"
+            }
+          }
+        }
+      ],
+      "latency_ms": 3893.728899769485,
+      "token_usage": {
+        "prompt_tokens": 1908,
+        "completion_tokens": 237,
+        "total_tokens": 2145,
+        "llm_calls": 3
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 318,
+          "completion_tokens": 27,
+          "latency_ms": 926.6201998107135
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 692,
+          "completion_tokens": 42,
+          "latency_ms": 864.2728002741933
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 898,
+          "completion_tokens": 168,
+          "latency_ms": 2100.320199970156
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": true,
+        "retrieval_ok": null
+      },
+      "error": null
+    },
+    {
+      "id": "E10",
+      "category": "ticket",
+      "message": "T9999 现在是什么状态？",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "ticket_op",
+        "tool": "get_ticket",
+        "tool_args": {
+          "ticket_id": "T9999"
+        },
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "ticket_op",
+      "confidence": 0.93,
+      "answer": "我查了一下，系统里没有找到工单 T9999，可能是工单号记错了，或者这张工单还没有创建。\n\n建议您：\n1. 核对一下工单号（通常是 T 加数字，比如 T1001）；\n2. 如果确认编号无误，可能是工单没有成功提交，可以告诉我具体问题，我帮您新建一张工单。\n\n需要我帮您建单吗？",
+      "citations": [],
+      "tool_trace": [
+        {
+          "name": "get_ticket",
+          "arguments": "{\"ticket_id\": \"T9999\"}",
+          "result": {
+            "ok": false,
+            "error": "ticket_not_found",
+            "message": "没有找到工单 T9999",
+            "ticket_id": "T9999"
+          }
+        }
+      ],
+      "latency_ms": 2727.7895999141037,
+      "token_usage": {
+        "prompt_tokens": 1769,
+        "completion_tokens": 156,
+        "total_tokens": 1925,
+        "llm_calls": 3
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 310,
+          "completion_tokens": 27,
+          "latency_ms": 815.1163002476096
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 684,
+          "completion_tokens": 42,
+          "latency_ms": 900.8023999631405
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 775,
+          "completion_tokens": 87,
+          "latency_ms": 1010.7693001627922
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": true,
+        "retrieval_ok": null
+      },
+      "error": null
+    },
+    {
+      "id": "E11",
+      "category": "ticket",
+      "message": "我的笔记本连不上公司 Wi-Fi，帮我新建一个 IT 工单。",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "ticket_op",
+        "tool": "create_ticket",
+        "tool_args": {
+          "category": "IT"
+        },
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "ticket_op",
+      "confidence": 0.96,
+      "answer": "工单已创建成功 ✅\n\n- **工单号**：T1013\n- **标题**：笔记本无法连接公司 Wi-Fi\n- **分类**：IT\n- **优先级**：普通\n- **状态**：待处理（open）\n- **处理人**：暂未分配\n- **创建时间**：2026-11-11 14:51\n\n目前工单已进入队列，等待 IT 同事接单。如果这个问题影响到您当前的工作、需要尽快处理，可以告诉我，我帮您升级为加急。",
+      "citations": [],
+      "tool_trace": [
+        {
+          "name": "create_ticket",
+          "arguments": "{\"title\": \"笔记本无法连接公司 Wi-Fi\", \"description\": \"用户反馈笔记本连不上公司 Wi-Fi，需要 IT 协助排查网络连接问题。\", \"category\": \"IT\", \"priority\": \"normal\"}",
+          "result": {
+            "ok": true,
+            "ticket": {
+              "ticket_id": "T1013",
+              "title": "笔记本无法连接公司 Wi-Fi",
+              "description": "用户反馈笔记本连不上公司 Wi-Fi，需要 IT 协助排查网络连接问题。",
+              "status": "open",
+              "priority": "normal",
+              "category": "IT",
+              "requester_id": "E005",
+              "assignee_id": null,
+              "created_at": "2026-11-11 14:51",
+              "updated_at": "2026-11-11 14:51",
+              "escalated_at": null,
+              "escalation_reason": null,
+              "requester_name": "陈磊",
+              "assignee_name": null
+            }
+          }
+        }
+      ],
+      "latency_ms": 3007.0744999684393,
+      "token_usage": {
+        "prompt_tokens": 1981,
+        "completion_tokens": 261,
+        "total_tokens": 2242,
+        "llm_calls": 3
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 318,
+          "completion_tokens": 28,
+          "latency_ms": 728.8998002186418
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 692,
+          "completion_tokens": 116,
+          "latency_ms": 1179.7904996201396
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 971,
+          "completion_tokens": 117,
+          "latency_ms": 1086.5825000219047
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": true,
+        "retrieval_ok": null
+      },
+      "error": null
+    },
+    {
+      "id": "E12",
+      "category": "ticket",
+      "message": "T1005 的投影仪问题一直没人处理，帮我升级。",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "ticket_op",
+        "tool": "escalate_ticket",
+        "tool_args": {
+          "ticket_id": "T1005"
+        },
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "ticket_op",
+      "confidence": 0.93,
+      "answer": "升级已完成 ✅\n\n- **工单号**：T1005\n- **标题**：会议室投影仪画面偏色（501 会议室，画面整体发黄，影响演示）\n- **优先级**：low → **high**\n- **升级时间**：2026-11-11 14:51\n- **升级原因**：工单创建后一直未分配处理人、无任何进展，投影仪偏色影响会议室演示，申请升级并尽快指派处理人\n\n需要提醒你一点：这张工单目前**仍然没有分配处理人**（assignee 为空）。升级已经提高了优先级，但指派还需要行政侧安排。如果今天内仍无人接手，建议直接联系行政负责人，或告诉我，我再帮你跟进。",
+      "citations": [],
+      "tool_trace": [
+        {
+          "name": "get_ticket",
+          "arguments": "{\"ticket_id\": \"T1005\"}",
+          "result": {
+            "ok": true,
+            "ticket": {
+              "ticket_id": "T1005",
+              "title": "会议室投影仪画面偏色",
+              "description": "501 会议室投影画面整体发黄，影响演示",
+              "status": "open",
+              "priority": "low",
+              "category": "行政",
+              "requester_id": "E007",
+              "assignee_id": null,
+              "created_at": "2026-10-12 15:30",
+              "updated_at": "2026-10-12 15:30",
+              "escalated_at": null,
+              "escalation_reason": null,
+              "requester_name": "孙悦",
+              "assignee_name": null
+            }
+          }
+        },
+        {
+          "name": "escalate_ticket",
+          "arguments": "{\"ticket_id\": \"T1005\", \"reason\": \"工单创建后一直未分配处理人、无任何进展，投影仪偏色影响会议室演示，申请升级并尽快指派处理人\"}",
+          "result": {
+            "ok": true,
+            "ticket": {
+              "ticket_id": "T1005",
+              "title": "会议室投影仪画面偏色",
+              "description": "501 会议室投影画面整体发黄，影响演示",
+              "status": "open",
+              "priority": "high",
+              "category": "行政",
+              "requester_id": "E007",
+              "assignee_id": null,
+              "created_at": "2026-10-12 15:30",
+              "updated_at": "2026-11-11 14:51",
+              "escalated_at": "2026-11-11 14:51",
+              "escalation_reason": "工单创建后一直未分配处理人、无任何进展，投影仪偏色影响会议室演示，申请升级并尽快指派处理人",
+              "requester_name": "孙悦",
+              "assignee_name": null
+            }
+          }
+        }
+      ],
+      "latency_ms": 4333.225899841636,
+      "token_usage": {
+        "prompt_tokens": 3158,
+        "completion_tokens": 395,
+        "total_tokens": 3553,
+        "llm_calls": 4
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 317,
+          "completion_tokens": 27,
+          "latency_ms": 698.8326003775001
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 691,
+          "completion_tokens": 49,
+          "latency_ms": 778.332999907434
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 896,
+          "completion_tokens": 163,
+          "latency_ms": 1363.1945000961423
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 1254,
+          "completion_tokens": 156,
+          "latency_ms": 1486.2534999847412
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": true,
+        "retrieval_ok": null
+      },
+      "error": null
+    },
+    {
+      "id": "E13",
+      "category": "ticket",
+      "message": "T1010 已经关了，我还是不满意，帮我再升级一下。",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "ticket_op",
+        "tool": "escalate_ticket",
+        "tool_args": {
+          "ticket_id": "T1010"
+        },
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "handoff",
+      "confidence": 0.85,
+      "answer": "这个问题需要人工协助，已为你转接。触发原因：不满并要求升级投诉",
+      "citations": [],
+      "tool_trace": [],
+      "latency_ms": 531.9599998183548,
+      "token_usage": {
+        "prompt_tokens": 317,
+        "completion_tokens": 25,
+        "total_tokens": 342,
+        "llm_calls": 1
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 317,
+          "completion_tokens": 25,
+          "latency_ms": 531.8983001634479
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": false,
+        "tool_ok": false,
+        "retrieval_ok": null
+      },
+      "error": null
+    },
+    {
+      "id": "E14",
+      "category": "ticket",
+      "message": "之前那个 VPN 报修单，编号是 T1002，现在搞定了没？",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "ticket_op",
+        "tool": "get_ticket",
+        "tool_args": {
+          "ticket_id": "T1002"
+        },
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "ticket_op",
+      "confidence": 0.93,
+      "answer": "T1002 已经处理完了。\n\n- **标题**：VPN 客户端登录失败（出差期间提示认证失败，换网络也一样）\n- **状态**：已解决（resolved）\n- **优先级**：普通\n- **处理人**：刘洋\n- **提交时间**：2026-09-28 10:05，最后更新：2026-09-29 16:20\n\n如果现在 VPN 还是连不上，或者问题又出现了，告诉我，我可以帮你重新开一张工单或把这张升级处理。",
+      "citations": [],
+      "tool_trace": [
+        {
+          "name": "get_ticket",
+          "arguments": "{\"ticket_id\": \"T1002\"}",
+          "result": {
+            "ok": true,
+            "ticket": {
+              "ticket_id": "T1002",
+              "title": "VPN 客户端登录失败",
+              "description": "出差期间 VPN 一直提示认证失败，换网络也一样",
+              "status": "resolved",
+              "priority": "normal",
+              "category": "IT",
+              "requester_id": "E007",
+              "assignee_id": "E006",
+              "created_at": "2026-09-28 10:05",
+              "updated_at": "2026-09-29 16:20",
+              "escalated_at": null,
+              "escalation_reason": null,
+              "requester_name": "孙悦",
+              "assignee_name": "刘洋"
+            }
+          }
+        }
+      ],
+      "latency_ms": 2523.219299968332,
+      "token_usage": {
+        "prompt_tokens": 1915,
+        "completion_tokens": 184,
+        "total_tokens": 2099,
+        "llm_calls": 3
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 321,
+          "completion_tokens": 27,
+          "latency_ms": 704.0307000279427
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 695,
+          "completion_tokens": 42,
+          "latency_ms": 688.8051000423729
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 899,
+          "completion_tokens": 115,
+          "latency_ms": 1129.4729001820087
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": true,
+        "retrieval_ok": null
+      },
+      "error": null
+    },
+    {
+      "id": "E15",
+      "category": "handoff",
+      "message": "我要投诉行政前台的服务态度，请转人工。",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "handoff",
+        "tool": null,
+        "tool_args": {},
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "handoff",
+      "confidence": 0.98,
+      "answer": "这个问题需要人工协助，已为你转接。触发原因：投诉并要求转人工",
+      "citations": [],
+      "tool_trace": [],
+      "latency_ms": 630.0518997013569,
+      "token_usage": {
+        "prompt_tokens": 313,
+        "completion_tokens": 25,
+        "total_tokens": 338,
+        "llm_calls": 1
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 313,
+          "completion_tokens": 25,
+          "latency_ms": 629.9428003840148
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": null
+      },
+      "error": null
+    },
+    {
+      "id": "E16",
+      "category": "handoff",
+      "message": "太离谱了！你们到底有没有人管？现在就叫负责人出来！",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "handoff",
+        "tool": null,
+        "tool_args": {},
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "handoff",
+      "confidence": 0.97,
+      "answer": "这个问题需要人工协助，已为你转接。触发原因：情绪激烈要求负责人",
+      "citations": [],
+      "tool_trace": [],
+      "latency_ms": 1130.7043000124395,
+      "token_usage": {
+        "prompt_tokens": 317,
+        "completion_tokens": 25,
+        "total_tokens": 342,
+        "llm_calls": 1
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 317,
+          "completion_tokens": 25,
+          "latency_ms": 1130.5654998868704
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": null
+      },
+      "error": null
+    },
+    {
+      "id": "E17",
+      "category": "handoff",
+      "message": "公司食堂下周的菜单是什么，能不能加个素食窗口？",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "handoff",
+        "tool": null,
+        "tool_args": {},
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "handoff",
+      "confidence": 0.72,
+      "answer": "这个问题需要人工协助，已为你转接。触发原因：咨询菜单并提建议，超出范围",
+      "citations": [],
+      "tool_trace": [],
+      "latency_ms": 807.9164000228047,
+      "token_usage": {
+        "prompt_tokens": 315,
+        "completion_tokens": 29,
+        "total_tokens": 344,
+        "llm_calls": 1
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 315,
+          "completion_tokens": 29,
+          "latency_ms": 807.8223001211882
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": null
+      },
+      "error": null
+    },
+    {
+      "id": "E18",
+      "category": "handoff",
+      "message": "我的身份证号和工资卡号需要人工核对，别让机器人看，帮我转人工。",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "handoff",
+        "tool": null,
+        "tool_args": {},
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "handoff",
+      "confidence": 0.97,
+      "answer": "这个问题需要人工协助，已为你转接。触发原因：要求人工处理敏感信息",
+      "citations": [],
+      "tool_trace": [],
+      "latency_ms": 793.904600199312,
+      "token_usage": {
+        "prompt_tokens": 321,
+        "completion_tokens": 26,
+        "total_tokens": 347,
+        "llm_calls": 1
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 321,
+          "completion_tokens": 26,
+          "latency_ms": 793.8385000452399
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": null
+      },
+      "error": null
+    },
+    {
+      "id": "E19",
+      "category": "boundary",
+      "message": "在吗",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "handoff",
+        "tool": null,
+        "tool_args": {},
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "handoff",
+      "confidence": 0.6,
+      "answer": "这个问题需要人工协助，已为你转接。触发原因：无明确诉求无法判断",
+      "citations": [],
+      "tool_trace": [],
+      "latency_ms": 992.3254000023007,
+      "token_usage": {
+        "prompt_tokens": 304,
+        "completion_tokens": 26,
+        "total_tokens": 330,
+        "llm_calls": 1
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 304,
+          "completion_tokens": 26,
+          "latency_ms": 992.2727001830935
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": null
+      },
+      "error": null
+    },
+    {
+      "id": "E20",
+      "category": "boundary",
+      "message": "我今天早上到公司以后发现办公电脑一直无法正常启动，按电源键后屏幕只亮一下又黑掉，已经试过更换电源线、换到另一个插座、长按电源键强制重启，也把显示器和同事的电脑交换测试过，确认显示器本身没有问题。因为下午两点要给客户做方案演示，电脑里有会议要用的文件，现在非常着急，请帮我尽快新建一个 IT 报修工单，并写上这是影响客户演示的紧急问题，也希望后续有人联系我确认处理进度。如果今天上午不能解决，请优先安排备用电脑，我的手机号可以直接在员工通讯录里查到。",
+      "expect_no_basis": false,
+      "expected": {
+        "intent": "ticket_op",
+        "tool": null,
+        "tool_args": {},
+        "policy": null,
+        "no_basis": false
+      },
+      "intent": "ticket_op",
+      "confidence": 0.97,
+      "answer": "工单已创建成功，信息如下：\n\n- **工单号：T1014**\n- **标题**：办公电脑无法开机（按电源键屏幕亮一下即黑），下午两点客户方案演示急需使用\n- **分类**：IT\n- **优先级**：urgent（紧急）\n- **状态**：open（待处理）\n- **处理人**：暂未分配\n\n工单描述中已完整记录您的情况：故障现象、已做的排查（换电源线、换插座、强制重启、交叉测试显示器确认显示器无问题）、下午 14:00 客户演示的时间要求，以及两项诉求——请处理人联系您确认进度（手机号可在员工通讯录查询）、若上午无法修复请优先安排备用电脑。\n\n**需要提醒您两点：**\n1. 目前工单还没有分配处理人。如果您希望我进一步升级工单、推动尽快派单，请告诉我，我可以帮您提交升级申请。\n2. 由于演示时间比较紧，建议您同时直接联系 IT 值班同事或您的部门助理，先把备用电脑的事情落实下来，避免等待派单耽误时间。\n\n需要我现在帮您升级这张工单吗？",
+      "citations": [],
+      "tool_trace": [
+        {
+          "name": "create_ticket",
+          "arguments": "{\"title\": \"办公电脑无法开机（按电源键屏幕亮一下即黑），下午两点客户方案演示急需使用\", \"description\": \"【紧急·影响客户演示】今早到公司发现办公电脑无法正常启动：按电源键后屏幕只亮一下又黑掉。已自行排查：更换电源线、换到另一个插座、长按电源键强制重启，并将显示器与同事电脑交换测试，确认显示器本身无问题，故障应为主机侧。\\n\\n时间要求：今天下午 14:00 需为客户做方案演示，会议文件在该电脑内，情况紧急，请尽快处理。\\n\\n补充诉求：\\n1. 请安排人员联系我确认处理进度（手机号可在员工通讯录查询）。\\n2. 若今天上午无法修复，请优先安排一台备用电脑，以保证下午演示正常进行。\", \"category\": \"IT\", \"priority\": \"urgent\"}",
+          "result": {
+            "ok": true,
+            "ticket": {
+              "ticket_id": "T1014",
+              "title": "办公电脑无法开机（按电源键屏幕亮一下即黑），下午两点客户方案演示急需使用",
+              "description": "【紧急·影响客户演示】今早到公司发现办公电脑无法正常启动：按电源键后屏幕只亮一下又黑掉。已自行排查：更换电源线、换到另一个插座、长按电源键强制重启，并将显示器与同事电脑交换测试，确认显示器本身无问题，故障应为主机侧。\n\n时间要求：今天下午 14:00 需为客户做方案演示，会议文件在该电脑内，情况紧急，请尽快处理。\n\n补充诉求：\n1. 请安排人员联系我确认处理进度（手机号可在员工通讯录查询）。\n2. 若今天上午无法修复，请优先安排一台备用电脑，以保证下午演示正常进行。",
+              "status": "open",
+              "priority": "urgent",
+              "category": "IT",
+              "requester_id": "E005",
+              "assignee_id": null,
+              "created_at": "2026-11-11 14:51",
+              "updated_at": "2026-11-11 14:51",
+              "escalated_at": null,
+              "escalation_reason": null,
+              "requester_name": "陈磊",
+              "assignee_name": null
+            }
+          }
+        }
+      ],
+      "latency_ms": 4360.811599995941,
+      "token_usage": {
+        "prompt_tokens": 2628,
+        "completion_tokens": 533,
+        "total_tokens": 3161,
+        "llm_calls": 3
+      },
+      "llm_calls": [
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 436,
+          "completion_tokens": 29,
+          "latency_ms": 705.4787999950349
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 810,
+          "completion_tokens": 257,
+          "latency_ms": 1868.7725998461246
+        },
+        {
+          "model": "deepseek-flash",
+          "served_by": "deepseek",
+          "degraded": false,
+          "prompt_tokens": 1382,
+          "completion_tokens": 247,
+          "latency_ms": 1780.019999947399
+        }
+      ],
+      "fallback": null,
+      "fallback_reason": null,
+      "checks": {
+        "intent_ok": true,
+        "tool_ok": null,
+        "retrieval_ok": null
+      },
+      "error": null
+    }
+  ]
+}
