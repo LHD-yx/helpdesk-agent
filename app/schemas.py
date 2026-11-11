@@ -34,6 +34,17 @@ class ChatRequest(BaseModel):
     session_id: str = Field(default="default", max_length=64)
 
 
+class Citation(BaseModel):
+    """一条引用。由检索结果拼出来，不是模型自己写的。"""
+
+    policy_id: str
+    title: str
+    section: str
+    source_file: str
+    snippet: str
+    score: float
+
+
 class ChatResponse(BaseModel):
     """一次对话响应。
 
@@ -45,6 +56,7 @@ class ChatResponse(BaseModel):
     intent: Intent
     confidence: float = Field(ge=0.0, le=1.0)
     session_id: str
+    citations: list[Citation] = Field(default_factory=list)
 
 
 class HealthResponse(BaseModel):

@@ -11,17 +11,16 @@ D1 的三条分支都是桩（stub）：
 
 from __future__ import annotations
 
+from app.agent.policy_qa import answer as policy_answer
 from app.agent.router import classify
 from app.agent.ticket_ops import run_tool_loop
-from app.schemas import ChatResponse, Intent
-
-# 政策分支还是桩，等 D3 接入 RAG。
-POLICY_STUB = "（桩）政策分支待 D3 接入检索，今天先返回占位答案。"
+from app.schemas import ChatResponse, Citation, Intent
 
 
 def handle(message: str, session_id: str = "default") -> ChatResponse:
     """一次对话的主流程。今天是同步的，D5 前端接上时可能需要改成异步。"""
     route = classify(message)
+    citations: list[Citation] = []
 
     if route.intent is Intent.HANDOFF:
         answer = f"这个问题需要人工协助，已为你转接。触发原因：{route.reason}"
@@ -29,11 +28,14 @@ def handle(message: str, session_id: str = "default") -> ChatResponse:
         # 真正的工具循环：模型选工具 → 执行 → 结果回灌 → 生成答案。
         answer = run_tool_loop(message)["answer"]
     else:
-        answer = POLICY_STUB
+        result = policy_answer(message)
+        answer = result.answer
+        citations = [Citation(**c) for c in result.citations]
 
     return ChatResponse(
         answer=answer,
         intent=route.intent,
         confidence=route.confidence,
         session_id=session_id,
+        citations=citations,
     )
