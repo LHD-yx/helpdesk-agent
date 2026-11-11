@@ -412,7 +412,7 @@ def build_report(
     calibration = _calibration(results)
 
     lines = [
-        "# D4 基线评测报告",
+        "# D4 评测报告（修复后定稿）",
         "",
         "## 口径",
         "",
@@ -430,8 +430,8 @@ def build_report(
         "- 延迟：单条 `handle()` 端到端耗时的 P50 / P95，nearest-rank 算法。",
         "- token：累计全链路所有 LLM 调用的 API usage；输入/输出分别求和，"
         "单条均值统一除以 20。",
-        "- 转人工率：`fallback == true` 条数 / 20；B2 时业务响应尚无该字段，"
-        "因此第一版记为 N/A，B3 接入后重跑。",
+        "- 转人工率：结构化降级 `fallback == true` 条数 / 20；按任务卡口径，"
+        "不把路由直接判成 `handoff` 的情况混入 fallback 数量。",
         "",
         "## 五项指标",
         "",
@@ -473,7 +473,7 @@ def build_report(
                 if summary["fallback"]["available"]
                 else "N/A（B3 后统计）"
             )
-            + " | 记录基线 | 待 B3 |"
+            + " | 记录基线 | 已统计 |"
         ),
         "",
         "## 分项观察",
@@ -503,6 +503,26 @@ def build_report(
             f"| {bucket['range']} | {bucket['count']} | {bucket['correct']} | "
             f"{_fmt_rate(bucket['correct'], bucket['count'])} |"
         )
+
+    fallback_reasons = Counter(
+        record["fallback_reason"]
+        for record in results
+        if record["fallback"] is True
+    )
+    lines.extend(
+        [
+            "",
+            "### fallback 原因分布",
+            "",
+            "| fallback_reason | 条数 |",
+            "| --- | ---: |",
+        ]
+    )
+    if fallback_reasons:
+        for reason, count in sorted(fallback_reasons.items()):
+            lines.append(f"| `{reason}` | {count} |")
+    else:
+        lines.append("| 无 | 0 |")
 
     lines.extend(["", "## 失败样本", ""])
     if not failures:
