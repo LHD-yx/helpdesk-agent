@@ -96,3 +96,43 @@
 - [ ] README 能让陌生人按文档跑起来
 - [ ] 能 3 分钟讲清架构、流程、取舍、评测结果
 - [ ] 能答：为什么用 RAG？为什么用 Function Calling？工具失败怎么办？怎么评测？
+
+## 6. 实现现状（2026-11-12）
+
+| 模块 | 文件 | 状态 | 说明 |
+| --- | --- | --- | --- |
+| 配置层 | `app/config.py` | ✅ | 启动即校验供应商与模型；key 只从环境读取 |
+| 模型抽象 | `app/llm/` | ✅ | OpenAI 兼容实现；主备降级；`max_tokens` 透传 |
+| 数据层 | `app/db/` | ✅ | 三张表、外键、CHECK、幂等建库 |
+| 意图路由 | `app/agent/router.py` | ✅ | JSON mode；非法 JSON / 非法枚举 / 低置信度统一转人工 |
+| 工单工具 | `app/tools/` | ✅ | 查 / 建 / 升级；结构化错误；白名单分发 |
+| 工具循环 | `app/agent/ticket_ops.py` | ✅ | 最多 3 轮；回灌 `role=tool`；轮数上限兜底 |
+| 知识层 | `app/rag/` | ✅ | 按标题切片 47 块；bge-m3 1024 维；阈值 0.55；复合问句拆分 |
+| 政策问答 | `app/agent/policy_qa.py` | ✅ | 引用由代码拼；全拒 / 部分拒分级 |
+| 编排 | `app/agent/orchestrator.py` | ✅ | 三路分派；request_id；降级与 token 汇总 |
+| 可观测 | `app/observability/` | ✅ | JSON 行日志；`chat_start` / `chat_done` |
+| 前端 | `ui/streamlit_app.py` | ✅ | 走 HTTP；引用卡片；状态标记；已知限制 |
+| 评测 | `evals/` | ✅ | 20 条分层用例；六项指标；报告与原始结果 |
+
+实际调用链：
+
+```
+Streamlit → POST /chat → orchestrator.handle()
+  → router.classify()            （1 次 LLM）
+  ├─ policy_qa → retriever（拆分 + 向量）→ policy_qa.answer()（1 次 LLM）
+  ├─ ticket_op → run_tool_loop()（1–3 次 LLM + 工具执行）
+  └─ handoff   → 直接返回
+  → 写 chat_done 日志 → ChatResponse
+```
+
+## 7. 与原设计的差异
+
+| 原计划 | 实际 | 原因 |
+| --- | --- | --- |
+| BM25 + 向量混合检索 | 只做向量 | 时间不足；已列入投递后补课项 |
+| 多轮记忆 + 上下文压缩 | 未实现，`session_id` 仅透传 | 与 D4 评测合并后时间不够；UI 已如实标注 |
+| 权限系统 | 提交人固定 `E005` | 两周版范围外 |
+| Docker / CI | 未做 | 保留在投递后补课清单 |
+| 高级重排 | 未做 | 同上 |
+
+**这些差异不回填进"已完成"清单**，而是以"已知限制"的形式同时出现在 README 与本文档中——面试被追问时，答"我知道缺什么、为什么缺、下一步怎么做"，比假装做全了更可信。
