@@ -36,6 +36,10 @@ class PolicyAnswer:
     top_score: float = 0.0
     fallback: bool = False
     fallback_reason: str = ""
+    served_by: str = ""
+    degraded: bool = False
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
 
 
 def _context(hits: list[Hit]) -> str:
@@ -82,6 +86,10 @@ def answer(question: str) -> PolicyAnswer:
             top_score=hits[0].score,
             fallback=True,
             fallback_reason="no_policy_basis",
+            served_by=resp.served_by,
+            degraded=resp.degraded,
+            prompt_tokens=resp.prompt_tokens,
+            completion_tokens=resp.completion_tokens,
         )
 
     if refused:
@@ -91,10 +99,18 @@ def answer(question: str) -> PolicyAnswer:
             top_score=hits[0].score,
             fallback=True,
             fallback_reason="partial_no_basis",
+            served_by=resp.served_by,
+            degraded=resp.degraded,
+            prompt_tokens=resp.prompt_tokens,
+            completion_tokens=resp.completion_tokens,
         )
 
     return PolicyAnswer(
         answer=answer_text,
         citations=citations,
         top_score=hits[0].score,
+        served_by=resp.served_by,
+        degraded=resp.degraded,
+        prompt_tokens=resp.prompt_tokens,
+        completion_tokens=resp.completion_tokens,
     )

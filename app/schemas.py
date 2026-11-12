@@ -53,6 +53,11 @@ class ChatResponse(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     session_id: str
     citations: list[Citation] = Field(default_factory=list)
+
+    # ---- 可观测性：一次请求的身份与健康状态 ----
+    request_id: str = ""
+    served_by: str = ""      # 最终答案由哪个 provider 产出
+    degraded: bool = False   # 本次请求中是否发生过降级（任一环节）
     fallback: bool = False
     fallback_reason: str = ""
 

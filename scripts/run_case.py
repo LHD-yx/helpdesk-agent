@@ -52,6 +52,8 @@ def main() -> int:
     )
 
     print(f"实际: intent={resp.intent.value} confidence={resp.confidence:.2f}")
+    print(f"      request_id={resp.request_id} served_by={resp.served_by or '-'} "
+          f"degraded={resp.degraded}")
     print(f"      fallback={resp.fallback} reason={resp.fallback_reason or '-'}")
     print(f"引用: {cites or '无'}")
     print(f"答案: {resp.answer}")

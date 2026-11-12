@@ -54,6 +54,12 @@ class IntentResult(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     reason: str = ""
 
+    # 可观测性：谁服务的、有没有降级、花了多少 token
+    served_by: str = ""
+    degraded: bool = False
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+
 
 def _strip_fences(text: str) -> str:
     """模型常把 JSON 包在 ```json 里，先剥掉围栏再解析。"""
@@ -106,4 +112,13 @@ def classify(message: str) -> IntentResult:
         temperature=0.0,
         response_format={"type": "json_object"},
     )
-    return apply_policy(parse_result(resp.content))
+    result = apply_policy(parse_result(resp.content))
+    # 解析/兜底会重建 IntentResult，所以用 copy 把调用侧的信息补回去。
+    return result.model_copy(
+        update={
+            "served_by": resp.served_by,
+            "degraded": resp.degraded,
+            "prompt_tokens": resp.prompt_tokens,
+            "completion_tokens": resp.completion_tokens,
+        }
+    )

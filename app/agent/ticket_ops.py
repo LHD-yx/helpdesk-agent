@@ -66,9 +66,18 @@ def run_tool_loop(
         {"role": "user", "content": message},
     ]
     trace: list[dict[str, Any]] = []
+    # 一轮请求里可能调用多次模型，token 和降级要跨轮累计。
+    served_by = ""
+    degraded = False
+    prompt_tokens = 0
+    completion_tokens = 0
 
     for round_no in range(1, max_rounds + 1):
         resp = chat(messages, temperature=0.0, tools=TOOL_SCHEMAS)
+        served_by = resp.served_by or served_by
+        degraded = degraded or resp.degraded
+        prompt_tokens += resp.prompt_tokens
+        completion_tokens += resp.completion_tokens
 
         if not resp.tool_calls:
             return {
@@ -76,6 +85,10 @@ def run_tool_loop(
                 "tool_calls": trace,
                 "rounds": round_no,
                 "stopped_by": "final_answer",
+                "served_by": served_by,
+                "degraded": degraded,
+                "prompt_tokens": prompt_tokens,
+                "completion_tokens": completion_tokens,
             }
 
         messages.append(_assistant_tool_message(resp))
@@ -97,4 +110,8 @@ def run_tool_loop(
         "tool_calls": trace,
         "rounds": max_rounds,
         "stopped_by": "max_rounds",
+        "served_by": served_by,
+        "degraded": degraded,
+        "prompt_tokens": prompt_tokens,
+        "completion_tokens": completion_tokens,
     }
