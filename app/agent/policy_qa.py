@@ -8,6 +8,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -16,6 +17,10 @@ from app.rag.retriever import Hit, build_citations, retrieve
 
 NO_BASIS_ANSWER = "公司政策里没有找到相关规定，我把这个问题转给人工同事处理。"
 NO_BASIS_MARKER = "公司政策里没有找到相关规定"
+
+# 只认 [P001] 这种编号，且必须是本次检索真的命中的政策——
+# 模型凭空写一个 [P999] 不算"答了一部分"。
+CITATION_MARKER = re.compile(r"\[(P\d{3})\]")
 
 SYSTEM_PROMPT = """你是企业政策助手。严格遵守：
 1. 只能依据【资料】回答，不得使用资料之外的知识。
@@ -59,9 +64,18 @@ def answer(question: str) -> PolicyAnswer:
         temperature=0.1,
     )
     answer_text = resp.content.strip()
-    if NO_BASIS_MARKER in answer_text:
-        # 检索有相似 chunk 不等于真的有依据：模型明确拒答时，
-        # 不能继续把相似 chunk 作为引用返回，否则用户会看到自相矛盾的证据。
+    citations = build_citations(hits)
+
+    # 关键区分：全拒 vs 部分拒。
+    # 全拒 = 整条回答没有任何可用依据 → 清空引用。
+    # 部分拒 = 答了一部分并标了真实来源，只对另一半说"没找到" → 必须保留引用，
+    #          否则用户看到的是"有结论但没出处"，比不答更糟。
+    refused = NO_BASIS_MARKER in answer_text
+    cited_ids = set(CITATION_MARKER.findall(answer_text))
+    known_ids = {h.metadata["policy_id"] for h in hits}
+    has_real_citation = bool(cited_ids & known_ids)
+
+    if refused and not has_real_citation:
         return PolicyAnswer(
             answer=answer_text,
             citations=[],
@@ -69,8 +83,18 @@ def answer(question: str) -> PolicyAnswer:
             fallback=True,
             fallback_reason="no_policy_basis",
         )
+
+    if refused:
+        return PolicyAnswer(
+            answer=answer_text,
+            citations=citations,
+            top_score=hits[0].score,
+            fallback=True,
+            fallback_reason="partial_no_basis",
+        )
+
     return PolicyAnswer(
         answer=answer_text,
-        citations=build_citations(hits),
+        citations=citations,
         top_score=hits[0].score,
     )
