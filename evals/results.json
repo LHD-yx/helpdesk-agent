@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "sampled_at": "2026-11-11T15:17:54+08:00",
+    "sampled_at": "2026-11-12T16:23:27+08:00",
     "timezone": "Asia/Shanghai",
     "testset": "evals\\testset.jsonl",
     "testset_size": 20,
     "sample_rounds": 1,
-    "configured_model": "deepseek-chat",
+    "configured_model": "deepseek-flash",
     "provider": "deepseek",
     "embedding_model": "BAAI/bge-m3",
     "rag_chunks": 47,
@@ -23,32 +23,32 @@
       "rate": 1.0
     },
     "retrieval": {
-      "correct": 7,
+      "correct": 8,
       "total": 8,
-      "rate": 0.875,
-      "answerable_correct": 5,
+      "rate": 1.0,
+      "answerable_correct": 6,
       "answerable_total": 6,
       "no_basis_correct": 2,
       "no_basis_total": 2
     },
     "latency_ms": {
-      "p50": 2111.767799999825,
-      "p95": 3955.34930000008,
+      "p50": 2146.332899996196,
+      "p95": 4614.8804999975255,
       "method": "nearest-rank"
     },
     "tokens": {
-      "prompt_total": 24894,
-      "completion_total": 2571,
-      "total": 27465,
-      "prompt_mean": 1244.7,
-      "completion_mean": 128.55,
-      "total_mean": 1373.25,
+      "prompt_total": 26242,
+      "completion_total": 4231,
+      "total": 30473,
+      "prompt_mean": 1312.1,
+      "completion_mean": 211.55,
+      "total_mean": 1523.65,
       "source": "API usage，累计全部路由/政策/工具循环 LLM 调用"
     },
     "fallback": {
       "available": true,
-      "count": 3,
-      "rate": 0.15
+      "count": 2,
+      "rate": 0.1
     }
   },
   "results": [
@@ -66,7 +66,7 @@
       },
       "intent": "policy_qa",
       "confidence": 0.96,
-      "answer": "住宿报销上限取决于职级和城市档位：\n\n- 普通员工：一线城市 450 元/晚、二线城市 350 元/晚、其他城市 280 元/晚 [P001]\n- 主管/经理：一线城市 600 元/晚、二线城市 480 元/晚、其他城市 380 元/晚 [P001]\n- 总监及以上：一线城市 800 元/晚、二线城市 650 元/晚、其他城市 500 元/晚 [P001]\n\n超出上限部分由个人承担；因展会、大型会议导致酒店普遍涨价，提前报备并经部门负责人书面同意后可上浮不超过 30% [P001]。",
+      "answer": "出差住宿一晚最高可报 **1040 元**：适用于**总监及以上**在**一线城市**住宿，且因展会、大型会议导致酒店普遍涨价，已提前报备并经部门负责人书面同意，上浮不超过 30%（800 元 × 1.3）。[P001]\n\n一般上限为：总监及以上一线城市 800 元/晚；主管/经理一线城市 600 元/晚；普通员工一线城市 450 元/晚。[P001]",
       "citations": [
         {
           "policy_id": "P001",
@@ -74,7 +74,7 @@
           "section": "三、住宿标准",
           "source_file": "P001-travel-expense.md",
           "snippet": "住宿费按出差目的城市分档、按实际住宿天数据实报销，上限为：普通员工在一线城市每晚 450 元、二线城市 350 元、其他城市 280 元；主管及经理在一线城市每晚 600 元；总监及以上在一线城市每晚 800 元。超出上限的部分由个人承担。",
-          "score": 0.795
+          "score": 0.798
         },
         {
           "policy_id": "P001",
@@ -82,7 +82,7 @@
           "section": "四、交通标准",
           "source_file": "P001-travel-expense.md",
           "snippet": "飞机一律乘坐经济舱，航程超过 4 小时时总监及以上可乘坐公务舱。高铁及动车乘坐二等座，总监及以上可乘坐一等座。市内交通据实报销，单日上限 100 元。自驾出差的，按每公里 1.2 元报销燃油及过路费，须提前在出差申请中报备路线。",
-          "score": 0.698
+          "score": 0.703
         },
         {
           "policy_id": "P001",
@@ -90,23 +90,23 @@
           "section": "七、常见问题 > 住宿超出标准了怎么办",
           "source_file": "P001-travel-expense.md",
           "snippet": "超出上限的部分由个人承担，公司只报销标准内的金额。如果是因展会、会议导致当地酒店普遍涨价，须在预订前报备并取得部门负责人书面同意，可上浮不超过 30%。",
-          "score": 0.678
+          "score": 0.683
         },
         {
           "policy_id": "P001",
           "title": "差旅报销标准",
-          "section": "五、餐补标准",
+          "section": "七、常见问题 > 实习生出差的报销标准",
           "source_file": "P001-travel-expense.md",
-          "snippet": "出差期间餐补按每人每天 100 元计发，不足一天按一天计算，无需提供发票。出差期间如已由公司或客户统一安排用餐，当日餐补不再发放。",
-          "score": 0.639
+          "snippet": "按本制度标准的 80% 执行。",
+          "score": 0.647
         }
       ],
       "tool_trace": [],
-      "latency_ms": 2204.766999999947,
+      "latency_ms": 3756.563400005689,
       "token_usage": {
-        "prompt_tokens": 972,
-        "completion_tokens": 178,
-        "total_tokens": 1150,
+        "prompt_tokens": 996,
+        "completion_tokens": 349,
+        "total_tokens": 1345,
         "llm_calls": 2
       },
       "llm_calls": [
@@ -114,17 +114,17 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 441,
-          "completion_tokens": 25,
-          "latency_ms": 771.0790999999517
+          "prompt_tokens": 466,
+          "completion_tokens": 34,
+          "latency_ms": 783.0210999964038
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 531,
-          "completion_tokens": 153,
-          "latency_ms": 1138.8385999998718
+          "prompt_tokens": 530,
+          "completion_tokens": 315,
+          "latency_ms": 2761.1305999889737
         }
       ],
       "fallback": false,
@@ -150,7 +150,7 @@
       },
       "intent": "policy_qa",
       "confidence": 0.96,
-      "answer": "出差结束后须在 15 个工作日内提交报销单 [P001]。",
+      "answer": "出差结束后须在 **15 个工作日内**提交报销单 [P001]。逾期提交的，须由部门负责人签字说明原因后方可受理 [P001]。",
       "citations": [
         {
           "policy_id": "P001",
@@ -158,7 +158,7 @@
           "section": "六、报销流程与时限",
           "source_file": "P001-travel-expense.md",
           "snippet": "出差结束后须在 15 个工作日内提交报销单，附出差申请单、发票及行程凭证。逾期提交的，须由部门负责人签字说明原因后方可受理。报销单经直属主管审批、财务复核后，于每月 15 日和月末统一打款。",
-          "score": 0.82
+          "score": 0.739
         },
         {
           "policy_id": "P001",
@@ -166,7 +166,7 @@
           "section": "七、常见问题 > 出差结束后多久内必须提交报销",
           "source_file": "P001-travel-expense.md",
           "snippet": "15 个工作日内。逾期需部门负责人签字说明原因。",
-          "score": 0.796
+          "score": 0.718
         },
         {
           "policy_id": "P001",
@@ -174,23 +174,23 @@
           "section": "二、出差审批",
           "source_file": "P001-travel-expense.md",
           "snippet": "员工出差前须在 OA 系统提交出差申请，注明出差事由、目的地、起止日期和预计费用，经直属主管审批后方可执行。未审批先出差的，差旅费用原则上不予报销；确有紧急情况的，须在返回后 3 个工作日内补办审批并说明原因。",
-          "score": 0.739
+          "score": 0.649
         },
         {
           "policy_id": "P001",
           "title": "差旅报销标准",
-          "section": "四、交通标准",
+          "section": "差旅报销标准",
           "source_file": "P001-travel-expense.md",
-          "snippet": "飞机一律乘坐经济舱，航程超过 4 小时时总监及以上可乘坐公务舱。高铁及动车乘坐二等座，总监及以上可乘坐一等座。市内交通据实报销，单日上限 100 元。自驾出差的，按每公里 1.2 元报销燃油及过路费，须提前在出差申请中报备路线。",
-          "score": 0.669
+          "snippet": "| 项目 | 内容 |\n| --- | --- |\n| 文件编号 | P001 |\n| 版本 | v2 |\n| 生效日期 | 2025-01-01 |\n| 适用范围 | 全公司 |\n| 归口部门 | 财务部 |",
+          "score": 0.627
         }
       ],
       "tool_trace": [],
-      "latency_ms": 1589.3932000001314,
+      "latency_ms": 2094.1531999997096,
       "token_usage": {
-        "prompt_tokens": 826,
-        "completion_tokens": 42,
-        "total_tokens": 868,
+        "prompt_tokens": 849,
+        "completion_tokens": 74,
+        "total_tokens": 923,
         "llm_calls": 2
       },
       "llm_calls": [
@@ -198,17 +198,17 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 444,
-          "completion_tokens": 26,
-          "latency_ms": 935.7122000001254
+          "prompt_tokens": 469,
+          "completion_tokens": 38,
+          "latency_ms": 879.4749999942724
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 382,
-          "completion_tokens": 16,
-          "latency_ms": 536.6076999998768
+          "prompt_tokens": 380,
+          "completion_tokens": 36,
+          "latency_ms": 1020.1843999966513
         }
       ],
       "fallback": false,
@@ -234,7 +234,7 @@
       },
       "intent": "policy_qa",
       "confidence": 0.96,
-      "answer": "入职满1年不满3年的，每年5天年假 [P002]。",
+      "answer": "年假按累计司龄分档计算：满1年不满3年每年5天；满3年不满5年每年7天；满5年不满10年每年10天；满10年及以上每年15天。[P002]",
       "citations": [
         {
           "policy_id": "P002",
@@ -242,7 +242,7 @@
           "section": "二、年假天数",
           "source_file": "P002-leave.md",
           "snippet": "年假天数按累计司龄计算：入职满 1 年不满 3 年的，每年 5 天；满 3 年不满 5 年的，每年 7 天；满 5 年不满 10 年的，每年 10 天；满 10 年及以上的，每年 15 天。司龄以劳动合同签订日期起算，当年入职的按剩余月份折",
-          "score": 0.753
+          "score": 0.775
         },
         {
           "policy_id": "P002",
@@ -250,7 +250,7 @@
           "section": "三、年假申请与审批",
           "source_file": "P002-leave.md",
           "snippet": "年假须提前 3 个工作日在 OA 系统提交申请，由直属主管审批。连续休假 5 天及以上的，须经部门负责人审批。年假原则上应避开业务高峰期，同一团队同期休假人数不得超过该团队人数的三分之一。",
-          "score": 0.665
+          "score": 0.69
         },
         {
           "policy_id": "P002",
@@ -258,7 +258,7 @@
           "section": "一、适用范围",
           "source_file": "P002-leave.md",
           "snippet": "本规则适用于与公司签订劳动合同的全体正式员工。试用期员工同样享有年假，但须转正后方可申请使用。实习生不适用年假制度，按实习协议约定休假。",
-          "score": 0.651
+          "score": 0.671
         },
         {
           "policy_id": "P002",
@@ -266,15 +266,15 @@
           "section": "年假与调休规则",
           "source_file": "P002-leave.md",
           "snippet": "| 项目 | 内容 |\n| --- | --- |\n| 文件编号 | P002 |\n| 版本 | v1 |\n| 生效日期 | 2024-07-01 |\n| 适用范围 | 全公司 |\n| 归口部门 | 人事部 |",
-          "score": 0.633
+          "score": 0.652
         }
       ],
       "tool_trace": [],
-      "latency_ms": 2111.767799999825,
+      "latency_ms": 2146.332899996196,
       "token_usage": {
-        "prompt_tokens": 937,
-        "completion_tokens": 43,
-        "total_tokens": 980,
+        "prompt_tokens": 987,
+        "completion_tokens": 233,
+        "total_tokens": 1220,
         "llm_calls": 2
       },
       "llm_calls": [
@@ -282,17 +282,17 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 443,
-          "completion_tokens": 26,
-          "latency_ms": 1113.2884999999533
+          "prompt_tokens": 468,
+          "completion_tokens": 35,
+          "latency_ms": 676.8128999974579
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 494,
-          "completion_tokens": 17,
-          "latency_ms": 891.8214999998781
+          "prompt_tokens": 519,
+          "completion_tokens": 198,
+          "latency_ms": 1354.6934000041801
         }
       ],
       "fallback": false,
@@ -317,8 +317,8 @@
         "no_basis": false
       },
       "intent": "policy_qa",
-      "confidence": 0.95,
-      "answer": "法定节假日加班按 1:2 折算调休，且加班须提前在 OA 提交申请并获批，否则不计入调休 [P002]。",
+      "confidence": 0.94,
+      "answer": "法定节假日加班按 **1:2** 折算调休；加班需提前在 OA 申请并获批，否则不计入调休。[P002]",
       "citations": [
         {
           "policy_id": "P002",
@@ -326,7 +326,7 @@
           "section": "七、常见问题 > 加班怎么折算调休",
           "source_file": "P002-leave.md",
           "snippet": "工作日和周末加班按 1:1 折算，法定节假日加班按 1:2 折算。加班需提前在 OA 申请并获批，否则不计入调休。",
-          "score": 0.824
+          "score": 0.828
         },
         {
           "policy_id": "P002",
@@ -334,7 +334,7 @@
           "section": "四、加班与调休",
           "source_file": "P002-leave.md",
           "snippet": "工作日加班和周末加班按 1:1 折算调休，法定节假日加班按 1:2 折算调休。加班须提前在 OA 提交加班申请并获批准，未经审批的加班不计入调休时长。调休以小时为单位累计，最小使用单位为 1 小时。",
-          "score": 0.804
+          "score": 0.803
         },
         {
           "policy_id": "P002",
@@ -342,7 +342,7 @@
           "section": "五、调休有效期",
           "source_file": "P002-leave.md",
           "snippet": "调休须在当年 12 月 31 日前使用完毕，逾期清零，不折现、不结转。因公司原因导致无法安排调休的，由部门负责人书面说明后，可顺延至次年 3 月 31 日。",
-          "score": 0.648
+          "score": 0.644
         },
         {
           "policy_id": "P002",
@@ -350,15 +350,15 @@
           "section": "二、年假天数",
           "source_file": "P002-leave.md",
           "snippet": "年假天数按累计司龄计算：入职满 1 年不满 3 年的，每年 5 天；满 3 年不满 5 年的，每年 7 天；满 5 年不满 10 年的，每年 10 天；满 10 年及以上的，每年 15 天。司龄以劳动合同签订日期起算，当年入职的按剩余月份折",
-          "score": 0.627
+          "score": 0.628
         }
       ],
       "tool_trace": [],
-      "latency_ms": 1972.0056000001023,
+      "latency_ms": 1864.633799996227,
       "token_usage": {
-        "prompt_tokens": 955,
-        "completion_tokens": 62,
-        "total_tokens": 1017,
+        "prompt_tokens": 1005,
+        "completion_tokens": 133,
+        "total_tokens": 1138,
         "llm_calls": 2
       },
       "llm_calls": [
@@ -366,17 +366,17 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 441,
-          "completion_tokens": 28,
-          "latency_ms": 943.0982999999742
+          "prompt_tokens": 466,
+          "completion_tokens": 43,
+          "latency_ms": 786.5119999914896
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 514,
-          "completion_tokens": 34,
-          "latency_ms": 831.6266999997879
+          "prompt_tokens": 539,
+          "completion_tokens": 90,
+          "latency_ms": 979.6500999946147
         }
       ],
       "fallback": false,
@@ -402,7 +402,7 @@
       },
       "intent": "policy_qa",
       "confidence": 0.95,
-      "answer": "单笔 8000 元属于“5000 元以上”，由分管副总审批 [P003]。同时还需至少 3 家供应商书面报价、留存比价记录并说明选择理由 [P003]。",
+      "answer": "单笔 8000 元由**分管副总审批** [P003]。  \n同时需至少 3 家供应商书面报价、留存比价记录，并说明选择理由 [P003]。",
       "citations": [
         {
           "policy_id": "P003",
@@ -418,7 +418,7 @@
           "section": "六、常见问题 > 6000 元的设备谁审批",
           "source_file": "P003-procurement.md",
           "snippet": "单笔 5000 元以上由分管副总审批，同时需要至少 3 家供应商报价并说明选择理由。",
-          "score": 0.752
+          "score": 0.75
         },
         {
           "policy_id": "P003",
@@ -434,15 +434,15 @@
           "section": "三、比价要求",
           "source_file": "P003-procurement.md",
           "snippet": "单笔金额 2000 元及以上的采购，须取得至少 3 家供应商的书面报价并留存比价记录。单笔 5000 元以上的，除比价外还须说明选择理由。",
-          "score": 0.663
+          "score": 0.656
         }
       ],
       "tool_trace": [],
-      "latency_ms": 2433.385000000044,
+      "latency_ms": 2336.4998000033665,
       "token_usage": {
-        "prompt_tokens": 835,
-        "completion_tokens": 71,
-        "total_tokens": 906,
+        "prompt_tokens": 885,
+        "completion_tokens": 206,
+        "total_tokens": 1091,
         "llm_calls": 2
       },
       "llm_calls": [
@@ -450,17 +450,17 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 443,
-          "completion_tokens": 26,
-          "latency_ms": 990.8305999999811
+          "prompt_tokens": 468,
+          "completion_tokens": 39,
+          "latency_ms": 761.1026000085985
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 392,
-          "completion_tokens": 45,
-          "latency_ms": 1171.0931000000073
+          "prompt_tokens": 417,
+          "completion_tokens": 167,
+          "latency_ms": 1479.9961000098847
         }
       ],
       "fallback": false,
@@ -485,15 +485,48 @@
         "no_basis": false
       },
       "intent": "policy_qa",
-      "confidence": 0.95,
-      "answer": "生产数据库权限需要双签：直属主管和 IT 部负责人共同签字，并注明使用场景和预计使用时长 [P004]。\n\n关于权限有效多久，公司政策里没有找到相关规定。",
-      "citations": [],
+      "confidence": 0.93,
+      "answer": "生产数据库权限需要**双签：直属主管和 IT 部负责人共同签字**，并注明使用场景和预计使用时长 [P004]。\n\n权限有效期：**所有系统权限有效期为 90 天，到期自动失效**；需继续使用的，应在到期前 3 个工作日内重新提交申请。临时权限有效期不超过 30 天 [P004]。",
+      "citations": [
+        {
+          "policy_id": "P004",
+          "title": "信息系统账号与权限管理",
+          "section": "七、常见问题 > 生产数据库权限需要谁审批",
+          "source_file": "P004-it-account.md",
+          "snippet": "需要双签：直属主管和 IT 部负责人共同签字，并注明使用场景和预计使用时长。",
+          "score": 0.797
+        },
+        {
+          "policy_id": "P004",
+          "title": "信息系统账号与权限管理",
+          "section": "四、审批要求",
+          "source_file": "P004-it-account.md",
+          "snippet": "普通业务系统权限由直属主管审批。核心系统权限须由直属主管和该系统负责人共同审批。生产数据库权限须双签：直属主管签字加 IT 部负责人签字，并注明使用场景和预计使用时长。",
+          "score": 0.759
+        },
+        {
+          "policy_id": "P004",
+          "title": "信息系统账号与权限管理",
+          "section": "五、权限有效期",
+          "source_file": "P004-it-account.md",
+          "snippet": "所有系统权限的有效期为 90 天，到期自动失效。需要继续使用的，须在到期前 3 个工作日内重新提交申请。临时权限（如项目联调用）有效期不超过 30 天。",
+          "score": 0.755
+        },
+        {
+          "policy_id": "P004",
+          "title": "信息系统账号与权限管理",
+          "section": "七、常见问题 > 权限多久会过期",
+          "source_file": "P004-it-account.md",
+          "snippet": "所有权限有效期 90 天，到期自动失效，需在到期前 3 个工作日内重新申请。临时权限不超过 30 天。",
+          "score": 0.754
+        }
+      ],
       "tool_trace": [],
-      "latency_ms": 2160.591700000168,
+      "latency_ms": 2516.732399992179,
       "token_usage": {
-        "prompt_tokens": 858,
-        "completion_tokens": 67,
-        "total_tokens": 925,
+        "prompt_tokens": 815,
+        "completion_tokens": 215,
+        "total_tokens": 1030,
         "llm_calls": 2
       },
       "llm_calls": [
@@ -501,25 +534,25 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 445,
-          "completion_tokens": 26,
-          "latency_ms": 1038.868500000035
+          "prompt_tokens": 470,
+          "completion_tokens": 44,
+          "latency_ms": 884.8296999931335
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 413,
-          "completion_tokens": 41,
-          "latency_ms": 1018.1503000001157
+          "prompt_tokens": 345,
+          "completion_tokens": 171,
+          "latency_ms": 1420.7259999966482
         }
       ],
-      "fallback": true,
-      "fallback_reason": "no_policy_basis",
+      "fallback": false,
+      "fallback_reason": "",
       "checks": {
         "intent_ok": true,
         "tool_ok": null,
-        "retrieval_ok": false
+        "retrieval_ok": true
       },
       "error": null
     },
@@ -540,11 +573,11 @@
       "answer": "公司政策里没有找到相关规定，我把这个问题转给人工同事处理。",
       "citations": [],
       "tool_trace": [],
-      "latency_ms": 1196.3839000000007,
+      "latency_ms": 905.8103999996092,
       "token_usage": {
-        "prompt_tokens": 441,
-        "completion_tokens": 26,
-        "total_tokens": 467,
+        "prompt_tokens": 466,
+        "completion_tokens": 35,
+        "total_tokens": 501,
         "llm_calls": 1
       },
       "llm_calls": [
@@ -552,9 +585,9 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 441,
-          "completion_tokens": 26,
-          "latency_ms": 1107.74779999997
+          "prompt_tokens": 466,
+          "completion_tokens": 35,
+          "latency_ms": 801.0244000033708
         }
       ],
       "fallback": true,
@@ -583,11 +616,11 @@
       "answer": "公司政策里没有找到相关规定。",
       "citations": [],
       "tool_trace": [],
-      "latency_ms": 2027.037000000064,
+      "latency_ms": 2000.4796000139322,
       "token_usage": {
-        "prompt_tokens": 933,
-        "completion_tokens": 32,
-        "total_tokens": 965,
+        "prompt_tokens": 959,
+        "completion_tokens": 60,
+        "total_tokens": 1019,
         "llm_calls": 2
       },
       "llm_calls": [
@@ -595,17 +628,17 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 441,
-          "completion_tokens": 25,
-          "latency_ms": 1103.6300000000665
+          "prompt_tokens": 466,
+          "completion_tokens": 34,
+          "latency_ms": 809.5604000118328
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 492,
-          "completion_tokens": 7,
-          "latency_ms": 839.8575999999593
+          "prompt_tokens": 493,
+          "completion_tokens": 26,
+          "latency_ms": 1075.9798999933992
         }
       ],
       "fallback": true,
@@ -633,7 +666,7 @@
       },
       "intent": "ticket_op",
       "confidence": 0.95,
-      "answer": "工单 T1001 目前的状态如下：\n\n- **标题**：3楼打印机无法连接（办公室3楼打印机显示离线，重启打印机和电脑都无效）\n- **当前状态**：处理中（in_progress）\n- **优先级**：高\n- **分类**：IT\n- **提交人**：陈磊\n- **处理人**：刘洋\n- **创建时间**：2026-10-08 09:12\n- **最近更新**：2026-10-09 14:30\n- **是否升级**：未升级\n\n也就是说，这张工单已经由刘洋接手，正在处理中，目前还没有升级记录。需要我帮你催办或升级这张工单吗？",
+      "answer": "你的工单 **T1001** 目前的处理情况如下：\n\n- **标题**：3楼打印机无法连接\n- **问题描述**：办公室3楼打印机显示离线，重启打印机和电脑均无效\n- **当前状态**：处理中（in_progress）\n- **优先级**：高（high）\n- **分类**：IT\n- **提交人**：陈磊（E005）\n- **处理人**：刘洋（E006）\n- **创建时间**：2026-10-08 09:12\n- **最近更新**：2026-10-09 14:30\n- **升级记录**：目前尚未升级\n\n这张工单已经由刘洋接手，并且当前状态是“处理中”，说明正在跟进解决。从时间上看，最后一次更新发生在10月9日的14:30；如果你觉得进展偏慢，我可以帮你发起升级或加急。需要吗？",
       "citations": [],
       "tool_trace": [
         {
@@ -660,11 +693,11 @@
           }
         }
       ],
-      "latency_ms": 3423.1316000000334,
+      "latency_ms": 3638.0017999908887,
       "token_usage": {
-        "prompt_tokens": 2183,
-        "completion_tokens": 224,
-        "total_tokens": 2407,
+        "prompt_tokens": 2259,
+        "completion_tokens": 285,
+        "total_tokens": 2544,
         "llm_calls": 3
       },
       "llm_calls": [
@@ -672,25 +705,25 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 449,
-          "completion_tokens": 27,
-          "latency_ms": 1080.8996000000661
+          "prompt_tokens": 474,
+          "completion_tokens": 45,
+          "latency_ms": 749.4503000052646
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 764,
-          "completion_tokens": 42,
-          "latency_ms": 1122.3474000000806
+          "prompt_tokens": 789,
+          "completion_tokens": 43,
+          "latency_ms": 876.5981999895303
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 970,
-          "completion_tokens": 155,
-          "latency_ms": 1215.0065000000723
+          "prompt_tokens": 996,
+          "completion_tokens": 197,
+          "latency_ms": 2009.5406000036746
         }
       ],
       "fallback": false,
@@ -718,7 +751,7 @@
       },
       "intent": "ticket_op",
       "confidence": 0.95,
-      "answer": "我查了一下，系统里没有找到工单 T9999，可能是工单号记错了，或者这张工单还没有创建。\n\n建议您：\n1. 核对一下工单号（比如是否少了一位数字，或者字母写错了）；\n2. 如果确实还没提交过，可以告诉我具体问题，我帮您新建一张工单。\n\n需要我帮您建单吗？",
+      "answer": "我查询了 T9999，系统里没有找到这张工单。\n\n可能的原因有：\n- 工单号输入有误（例如少位、多一位或数字顺序不对）\n- 该工单不在当前系统，或尚未创建成功\n\n建议您：\n1. 核对一下工单号，再发给我重新查询；\n2. 如果是刚提交的工单，可能还没入库，稍等几分钟再查；\n3. 如果确实需要处理某件事但手里没有有效工单号，可以把问题描述给我，我帮您新建一张工单。",
       "citations": [],
       "tool_trace": [
         {
@@ -732,11 +765,11 @@
           }
         }
       ],
-      "latency_ms": 3558.569900000066,
+      "latency_ms": 3276.423600007547,
       "token_usage": {
-        "prompt_tokens": 2044,
-        "completion_tokens": 150,
-        "total_tokens": 2194,
+        "prompt_tokens": 2134,
+        "completion_tokens": 223,
+        "total_tokens": 2357,
         "llm_calls": 3
       },
       "llm_calls": [
@@ -744,25 +777,25 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 441,
-          "completion_tokens": 27,
-          "latency_ms": 1045.4419000000144
+          "prompt_tokens": 466,
+          "completion_tokens": 44,
+          "latency_ms": 942.5842000055127
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 756,
-          "completion_tokens": 42,
-          "latency_ms": 1168.8263000000916
+          "prompt_tokens": 781,
+          "completion_tokens": 57,
+          "latency_ms": 1075.2266000054078
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 847,
-          "completion_tokens": 81,
-          "latency_ms": 1342.2251999998025
+          "prompt_tokens": 887,
+          "completion_tokens": 122,
+          "latency_ms": 1256.593400001293
         }
       ],
       "fallback": false,
@@ -790,25 +823,25 @@
       },
       "intent": "ticket_op",
       "confidence": 0.96,
-      "answer": "工单已创建成功 ✅\n\n- **工单号**：T1013\n- **标题**：笔记本无法连接公司 Wi-Fi\n- **分类**：IT\n- **优先级**：普通\n- **状态**：待处理（open）\n- **处理人**：暂未分配\n- **创建时间**：2026-11-11 15:18\n\n目前工单已进入队列，等待 IT 同事接单。如果这个问题比较紧急、影响您正常工作，可以告诉我，我帮您升级加急处理。",
+      "answer": "工单已创建成功 ✅\n\n- **工单号**：T1013\n- **标题**：笔记本无法连接公司 Wi-Fi\n- **分类**：IT\n- **优先级**：普通（normal）\n- **状态**：已创建（open），暂未分配处理人\n\n接下来 IT 同事会受理并跟进排查。如果这个 Wi-Fi 问题已经影响到你的正常工作、需要尽快处理，可以告诉我，我可以帮你升级工单加急。另外，方便的话可以补充一下：是完全搜不到 Wi-Fi、能看到但连不上，还是提示密码/认证错误？这些信息能帮助 IT 更快定位问题。",
       "citations": [],
       "tool_trace": [
         {
           "name": "create_ticket",
-          "arguments": "{\"title\": \"笔记本无法连接公司 Wi-Fi\", \"description\": \"用户反馈笔记本电脑无法连接公司 Wi-Fi，需要 IT 协助排查网络连接问题。\", \"category\": \"IT\", \"priority\": \"normal\"}",
+          "arguments": "{\"title\": \"笔记本无法连接公司 Wi-Fi\", \"description\": \"用户反馈笔记本电脑连不上公司 Wi-Fi，需要 IT 协助排查网络连接问题。\", \"category\": \"IT\", \"priority\": \"normal\"}",
           "result": {
             "ok": true,
             "ticket": {
               "ticket_id": "T1013",
               "title": "笔记本无法连接公司 Wi-Fi",
-              "description": "用户反馈笔记本电脑无法连接公司 Wi-Fi，需要 IT 协助排查网络连接问题。",
+              "description": "用户反馈笔记本电脑连不上公司 Wi-Fi，需要 IT 协助排查网络连接问题。",
               "status": "open",
               "priority": "normal",
               "category": "IT",
               "requester_id": "E005",
               "assignee_id": null,
-              "created_at": "2026-11-11 15:18",
-              "updated_at": "2026-11-11 15:18",
+              "created_at": "2026-11-12 16:23",
+              "updated_at": "2026-11-12 16:23",
               "escalated_at": null,
               "escalation_reason": null,
               "requester_name": "陈磊",
@@ -817,11 +850,11 @@
           }
         }
       ],
-      "latency_ms": 3409.237800000028,
+      "latency_ms": 4614.8804999975255,
       "token_usage": {
-        "prompt_tokens": 2256,
-        "completion_tokens": 260,
-        "total_tokens": 2516,
+        "prompt_tokens": 2384,
+        "completion_tokens": 349,
+        "total_tokens": 2733,
         "llm_calls": 3
       },
       "llm_calls": [
@@ -829,25 +862,25 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 449,
-          "completion_tokens": 29,
-          "latency_ms": 915.7036000001426
+          "prompt_tokens": 474,
+          "completion_tokens": 44,
+          "latency_ms": 1002.4527000059607
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 764,
-          "completion_tokens": 116,
-          "latency_ms": 1015.7365000000027
+          "prompt_tokens": 789,
+          "completion_tokens": 169,
+          "latency_ms": 1730.5538000073284
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 1043,
-          "completion_tokens": 115,
-          "latency_ms": 1472.2295999999915
+          "prompt_tokens": 1121,
+          "completion_tokens": 136,
+          "latency_ms": 1876.0749000066426
         }
       ],
       "fallback": false,
@@ -875,12 +908,12 @@
       },
       "intent": "ticket_op",
       "confidence": 0.95,
-      "answer": "已为您升级成功 ✅\n\n**工单 T1005 详情**\n- 标题：会议室投影仪画面偏色（501 会议室投影画面整体发黄，影响演示）\n- 分类：行政\n- 优先级：高\n- 状态：open（处理中）\n- 提交人：孙悦\n- 处理人：暂未分配\n- 升级时间：2026-11-11 15:18\n- 升级原因：投影仪问题长期无人处理，用户要求升级加急\n\n需要提醒您的是：这张工单目前**还没有分配处理人**，这很可能就是一直没人跟进的原因。升级已经记录在案，建议您同时联系行政或 IT 的值班同事，请他们尽快指派一位负责人，这样处理会更快。需要我帮您再新建一张工单，专门催办指派处理人吗？",
+      "answer": "升级已成功提交 ✅\n\n**T1005 工单信息**\n- 标题：会议室投影仪画面偏色（501 会议室投影画面整体发黄，影响演示）\n- 分类：行政\n- 当前状态：open（处理中，未关闭）\n- 优先级：high\n- 提交人：孙悦\n- 升级时间：2026-11-12 16:23\n- 升级原因：用户反馈投影仪问题长期无人处理，要求升级加急\n\n补充提醒：这张工单目前**还没有分配处理人**，从 10 月 12 日创建至今，一直没人接手。这很可能就是“没人处理”的直接原因。建议：\n1. 升级后若 1 个工作日内仍未分配处理人，可再次反馈，要求指定行政或设备维护负责人；\n2. 如果 501 会议室近期有重要演示，可告知我，我帮你另建一张“设备临时替换或备用投影仪”的加急工单，先把演示保障住。",
       "citations": [],
       "tool_trace": [
         {
           "name": "escalate_ticket",
-          "arguments": "{\"ticket_id\": \"T1005\", \"reason\": \"投影仪问题长期无人处理，用户要求升级加急\"}",
+          "arguments": "{\"ticket_id\": \"T1005\", \"reason\": \"用户反馈投影仪问题长期无人处理，要求升级加急\"}",
           "result": {
             "ok": true,
             "ticket": {
@@ -893,20 +926,43 @@
               "requester_id": "E007",
               "assignee_id": null,
               "created_at": "2026-10-12 15:30",
-              "updated_at": "2026-11-11 15:18",
-              "escalated_at": "2026-11-11 15:18",
-              "escalation_reason": "投影仪问题长期无人处理，用户要求升级加急",
+              "updated_at": "2026-11-12 16:23",
+              "escalated_at": "2026-11-12 16:23",
+              "escalation_reason": "用户反馈投影仪问题长期无人处理，要求升级加急",
+              "requester_name": "孙悦",
+              "assignee_name": null
+            }
+          }
+        },
+        {
+          "name": "get_ticket",
+          "arguments": "{\"ticket_id\": \"T1005\"}",
+          "result": {
+            "ok": true,
+            "ticket": {
+              "ticket_id": "T1005",
+              "title": "会议室投影仪画面偏色",
+              "description": "501 会议室投影画面整体发黄，影响演示",
+              "status": "open",
+              "priority": "high",
+              "category": "行政",
+              "requester_id": "E007",
+              "assignee_id": null,
+              "created_at": "2026-10-12 15:30",
+              "updated_at": "2026-11-12 16:23",
+              "escalated_at": "2026-11-12 16:23",
+              "escalation_reason": "用户反馈投影仪问题长期无人处理，要求升级加急",
               "requester_name": "孙悦",
               "assignee_name": null
             }
           }
         }
       ],
-      "latency_ms": 3353.4583000000566,
+      "latency_ms": 4298.555200002738,
       "token_usage": {
-        "prompt_tokens": 2223,
-        "completion_tokens": 280,
-        "total_tokens": 2503,
+        "prompt_tokens": 2588,
+        "completion_tokens": 448,
+        "total_tokens": 3036,
         "llm_calls": 3
       },
       "llm_calls": [
@@ -914,25 +970,25 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 448,
-          "completion_tokens": 27,
-          "latency_ms": 701.8818000001374
+          "prompt_tokens": 473,
+          "completion_tokens": 44,
+          "latency_ms": 711.3344999961555
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 763,
-          "completion_tokens": 71,
-          "latency_ms": 974.5924999999716
+          "prompt_tokens": 788,
+          "completion_tokens": 185,
+          "latency_ms": 1475.549900002079
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 1012,
-          "completion_tokens": 182,
-          "latency_ms": 1668.5996000001069
+          "prompt_tokens": 1327,
+          "completion_tokens": 219,
+          "latency_ms": 2106.2284000072395
         }
       ],
       "fallback": false,
@@ -959,13 +1015,13 @@
         "no_basis": false
       },
       "intent": "ticket_op",
-      "confidence": 0.92,
-      "answer": "我按您的要求实际发起了对 T1010 的升级请求，但系统拒绝了。\n\n原因：这张工单已经是「已关闭」状态，系统不允许对已关闭的工单再做升级操作。\n\n下一步建议：\n1. 如果您对处理结果不满意，可以新建一张工单，说明是对 T1010 处理结果的申诉，并附上原工单号和不满意的具体点，这样会重新进入处理流程；\n2. 或者直接联系原处理人/其主管走线下复核。\n\n需要我帮您新建这张申诉工单吗？如果需要，请告诉我具体不满意的内容，我好写进工单描述里。",
+      "confidence": 0.93,
+      "answer": "我按您的要求实际提交了升级请求，但系统拒绝了。原因翻译如下：\n\n- **工单 T1010 目前是「已关闭（closed）」状态**，已关闭的工单系统不允许再升级，所以这次升级没有成功。\n\n下一步建议（可选其中一种）：\n1. **新建一张工单**：把您仍不满意的地方写清楚（例如原问题未解决、处理结果不符合预期），我可以帮您建单并关联说明这是 T1010 的后续问题，这样会有新的处理流程和负责人跟进。\n2. 如果您希望由原处理人继续处理，可以联系原工单的处理人，或走贵司的工单复开流程，把工单重新打开后再升级。\n\n需要我直接帮您新建一张后续工单吗？如果需要，请告诉我具体的问题描述和期望的优先级。",
       "citations": [],
       "tool_trace": [
         {
           "name": "escalate_ticket",
-          "arguments": "{\"ticket_id\": \"T1010\", \"reason\": \"用户对已关闭工单的处理结果不满意，要求再次升级处理\"}",
+          "arguments": "{\"ticket_id\": \"T1010\", \"reason\": \"用户反馈原工单关闭后处理结果仍不满意，要求再次升级处理\"}",
           "result": {
             "ok": false,
             "error": "ticket_closed",
@@ -974,11 +1030,11 @@
           }
         }
       ],
-      "latency_ms": 3955.34930000008,
+      "latency_ms": 3913.742500008084,
       "token_usage": {
-        "prompt_tokens": 2101,
-        "completion_tokens": 235,
-        "total_tokens": 2336,
+        "prompt_tokens": 2246,
+        "completion_tokens": 383,
+        "total_tokens": 2629,
         "llm_calls": 3
       },
       "llm_calls": [
@@ -986,25 +1042,25 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 448,
-          "completion_tokens": 27,
-          "latency_ms": 1182.9458000001978
+          "prompt_tokens": 473,
+          "completion_tokens": 61,
+          "latency_ms": 1083.978800001205
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 763,
-          "completion_tokens": 73,
-          "latency_ms": 1120.696199999884
+          "prompt_tokens": 788,
+          "completion_tokens": 143,
+          "latency_ms": 1006.0724999930244
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 890,
-          "completion_tokens": 135,
-          "latency_ms": 1650.1636000000417
+          "prompt_tokens": 985,
+          "completion_tokens": 179,
+          "latency_ms": 1821.9185000052676
         }
       ],
       "fallback": false,
@@ -1031,8 +1087,8 @@
         "no_basis": false
       },
       "intent": "ticket_op",
-      "confidence": 0.95,
-      "answer": "已经处理好了。\n\n- **工单号**：T1002\n- **标题**：VPN 客户端登录失败\n- **当前状态**：已解决（resolved）\n- **优先级**：普通\n- **处理人**：刘洋\n- **提交时间**：2026-09-28 10:05\n- **最后更新**：2026-09-29 16:20\n\n如果 VPN 现在还有认证失败的情况，请告诉我，我可以帮你重新开一张工单，或者把这张工单升级处理。",
+      "confidence": 0.94,
+      "answer": "你的 VPN 报修单已经处理完了：\n\n- **工单号**：T1002\n- **标题**：VPN 客户端登录失败（出差期间提示认证失败，换网络也一样）\n- **当前状态**：已解决\n- **优先级**：普通\n- **处理人**：刘洋\n- **提交时间**：2026-09-28 10:05\n- **最后更新**：2026-09-29 16:20\n\n工单显示已解决，最后更新是 9 月 29 日 16:20。建议你先实际连一下 VPN，确认恢复正常；如果还是连不上，或者问题又出现了，告诉我，我可以帮你重新开单或者升级处理。",
       "citations": [],
       "tool_trace": [
         {
@@ -1059,11 +1115,11 @@
           }
         }
       ],
-      "latency_ms": 3166.2350999999944,
+      "latency_ms": 3213.620800001081,
       "token_usage": {
-        "prompt_tokens": 2190,
-        "completion_tokens": 185,
-        "total_tokens": 2375,
+        "prompt_tokens": 2272,
+        "completion_tokens": 248,
+        "total_tokens": 2520,
         "llm_calls": 3
       },
       "llm_calls": [
@@ -1071,25 +1127,25 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 452,
-          "completion_tokens": 27,
-          "latency_ms": 1069.0572000000884
+          "prompt_tokens": 477,
+          "completion_tokens": 44,
+          "latency_ms": 844.9210999970092
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 767,
-          "completion_tokens": 42,
-          "latency_ms": 645.0882999999976
+          "prompt_tokens": 792,
+          "completion_tokens": 49,
+          "latency_ms": 933.7368999986211
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 971,
-          "completion_tokens": 116,
-          "latency_ms": 1451.1030000001028
+          "prompt_tokens": 1003,
+          "completion_tokens": 155,
+          "latency_ms": 1432.9402000003029
         }
       ],
       "fallback": false,
@@ -1114,15 +1170,15 @@
         "no_basis": false
       },
       "intent": "handoff",
-      "confidence": 0.98,
+      "confidence": 0.97,
       "answer": "这个问题需要人工协助，已为你转接。触发原因：投诉并要求转人工",
       "citations": [],
       "tool_trace": [],
-      "latency_ms": 777.8992999999446,
+      "latency_ms": 732.4617999984184,
       "token_usage": {
-        "prompt_tokens": 444,
-        "completion_tokens": 25,
-        "total_tokens": 469,
+        "prompt_tokens": 469,
+        "completion_tokens": 36,
+        "total_tokens": 505,
         "llm_calls": 1
       },
       "llm_calls": [
@@ -1130,9 +1186,9 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 444,
-          "completion_tokens": 25,
-          "latency_ms": 777.8137000000243
+          "prompt_tokens": 469,
+          "completion_tokens": 36,
+          "latency_ms": 732.2955999989063
         }
       ],
       "fallback": false,
@@ -1158,14 +1214,14 @@
       },
       "intent": "handoff",
       "confidence": 0.97,
-      "answer": "这个问题需要人工协助，已为你转接。触发原因：情绪激烈要求负责人",
+      "answer": "这个问题需要人工协助，已为你转接。触发原因：情绪激动要求负责人",
       "citations": [],
       "tool_trace": [],
-      "latency_ms": 1032.0621000000756,
+      "latency_ms": 957.8027000097791,
       "token_usage": {
-        "prompt_tokens": 448,
-        "completion_tokens": 25,
-        "total_tokens": 473,
+        "prompt_tokens": 473,
+        "completion_tokens": 35,
+        "total_tokens": 508,
         "llm_calls": 1
       },
       "llm_calls": [
@@ -1173,9 +1229,9 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 448,
-          "completion_tokens": 25,
-          "latency_ms": 1031.9761000000653
+          "prompt_tokens": 473,
+          "completion_tokens": 35,
+          "latency_ms": 957.6584000024013
         }
       ],
       "fallback": false,
@@ -1200,15 +1256,15 @@
         "no_basis": false
       },
       "intent": "handoff",
-      "confidence": 0.75,
-      "answer": "这个问题需要人工协助，已为你转接。触发原因：咨询菜单并提建议，超出范围",
+      "confidence": 0.8,
+      "answer": "这个问题需要人工协助，已为你转接。触发原因：食堂菜单与增设窗口超出范围",
       "citations": [],
       "tool_trace": [],
-      "latency_ms": 902.3515999999745,
+      "latency_ms": 1843.4525999909965,
       "token_usage": {
-        "prompt_tokens": 446,
-        "completion_tokens": 29,
-        "total_tokens": 475,
+        "prompt_tokens": 471,
+        "completion_tokens": 165,
+        "total_tokens": 636,
         "llm_calls": 1
       },
       "llm_calls": [
@@ -1216,9 +1272,9 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 446,
-          "completion_tokens": 29,
-          "latency_ms": 902.2767000001295
+          "prompt_tokens": 471,
+          "completion_tokens": 165,
+          "latency_ms": 1843.3816000033403
         }
       ],
       "fallback": false,
@@ -1244,14 +1300,14 @@
       },
       "intent": "handoff",
       "confidence": 0.97,
-      "answer": "这个问题需要人工协助，已为你转接。触发原因：要求转人工核对敏感信息",
+      "answer": "这个问题需要人工协助，已为你转接。触发原因：明确要求转人工核对敏感信息",
       "citations": [],
       "tool_trace": [],
-      "latency_ms": 795.408899999984,
+      "latency_ms": 1153.688800011878,
       "token_usage": {
-        "prompt_tokens": 452,
-        "completion_tokens": 27,
-        "total_tokens": 479,
+        "prompt_tokens": 477,
+        "completion_tokens": 47,
+        "total_tokens": 524,
         "llm_calls": 1
       },
       "llm_calls": [
@@ -1259,9 +1315,9 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 452,
-          "completion_tokens": 27,
-          "latency_ms": 795.3135000000202
+          "prompt_tokens": 477,
+          "completion_tokens": 47,
+          "latency_ms": 1153.5585999954492
         }
       ],
       "fallback": false,
@@ -1287,14 +1343,14 @@
       },
       "intent": "handoff",
       "confidence": 0.6,
-      "answer": "这个问题需要人工协助，已为你转接。触发原因：无明确诉求无法判断",
+      "answer": "这个问题需要人工协助，已为你转接。触发原因：无明确诉求，无法判断",
       "citations": [],
       "tool_trace": [],
-      "latency_ms": 697.812100000192,
+      "latency_ms": 794.2887999961386,
       "token_usage": {
-        "prompt_tokens": 435,
-        "completion_tokens": 26,
-        "total_tokens": 461,
+        "prompt_tokens": 460,
+        "completion_tokens": 28,
+        "total_tokens": 488,
         "llm_calls": 1
       },
       "llm_calls": [
@@ -1302,9 +1358,9 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 435,
-          "completion_tokens": 26,
-          "latency_ms": 697.7200999999695
+          "prompt_tokens": 460,
+          "completion_tokens": 28,
+          "latency_ms": 794.166400009999
         }
       ],
       "fallback": false,
@@ -1330,25 +1386,25 @@
       },
       "intent": "ticket_op",
       "confidence": 0.97,
-      "answer": "工单已创建成功，信息如下：\n\n- **工单号：T1014**\n- **标题**：办公电脑无法开机（按电源键屏幕亮一下即黑），影响下午两点客户方案演示\n- **分类**：IT\n- **优先级**：urgent（紧急）\n- **状态**：open（待处理）\n- **处理人**：暂未分配\n- **提交人**：陈磊\n\n工单描述中已完整记录您的排查过程（换电源线、换插座、强制重启、交叉测试显示器确认显示器无问题，故障疑似在主机侧），并明确写入了三点诉求：尽快安排 IT 上门检修、处理人主动联系您确认进度（手机号可在员工通讯录查询）、若上午无法修复请优先安排备用电脑保障下午演示。\n\n**接下来建议：**\n1. 目前工单尚未分配处理人，考虑到下午 14:00 的演示时间紧迫，建议您同时通过 IT 服务台电话或即时通讯群提醒值班同事查看 T1014。\n2. 如果稍后仍无人响应，您可以告诉我，我可以帮您对这张工单发起升级（加急）请求。\n3. 另外提醒：会议文件在那台电脑里，若主机可能无法及时修复，建议提前确认文件是否有云端或共享盘备份，以免影响演示。\n\n需要我现在帮您升级这张工单吗？",
+      "answer": "工单已建好，信息如下：\n\n- **工单号**：T1014\n- **标题**：办公电脑无法开机（按电源键屏幕亮一下即黑屏），影响下午两点客户方案演示\n- **分类**：IT\n- **优先级**：urgent（紧急）\n- **状态**：open（待处理）\n- **处理人**：暂无分配\n\n我已经在工单描述里写明了：\n1. 这是影响下午两点客户演示的紧急问题；\n2. 您已自行排查的 4 项（换电源线、换插座、强制重启、交换显示器测试确认显示器无故障）；\n3. 希望处理人主动联系您确认进度（手机号请对方查员工通讯录）；\n4. 若今天上午无法解决，请优先安排备用电脑。\n\n需要提醒您两点：\n- 目前工单**还没有分配处理人**，也尚未升级加急。如果您希望我按“影响客户演示、需上午解决”的理由再做一次**升级**操作，把工单顶到负责人那里，请告诉我，我会立即发起。\n- 在等待期间，建议您同时向同事借一台可用电脑，先把演示文件准备好或拷到 U 盘、云盘，避免时间被卡住。\n\n需要我现在就提交升级请求吗？",
       "citations": [],
       "tool_trace": [
         {
           "name": "create_ticket",
-          "arguments": "{\"title\": \"办公电脑无法开机（按电源键屏幕亮一下即黑），影响下午两点客户方案演示\", \"description\": \"今早到公司发现办公电脑无法正常启动：按电源键后屏幕只亮一下又黑掉。已排查：更换电源线、换插座、长按电源键强制重启、与同事电脑交换显示器测试，确认显示器本身无问题，故障疑似在主机侧。\\n\\n紧急程度说明：今天下午 14:00 需为客户做方案演示，会议文件在该电脑内，属于影响客户演示的紧急问题，请优先处理。\\n\\n诉求：\\n1. 请尽快安排 IT 上门检修；\\n2. 请处理人主动联系我确认处理进度（手机号可在员工通讯录查询）；\\n3. 若今天上午无法修复，请优先安排备用电脑，以保障下午演示。\", \"category\": \"IT\", \"priority\": \"urgent\"}",
+          "arguments": "{\"title\": \"办公电脑无法开机（按电源键屏幕亮一下即黑屏），影响下午两点客户方案演示\", \"description\": \"【紧急·影响客户演示】员工今早到公司后发现办公电脑无法正常启动：按电源键后屏幕只亮一下又黑掉。\\n\\n员工已自行排查：\\n1. 更换电源线；\\n2. 换用另一个插座；\\n3. 长按电源键强制重启；\\n4. 与同事电脑交换显示器测试，确认显示器本身无故障。\\n\\n诉求：\\n- 电脑内有下午两点客户方案演示所需文件，情况紧急，请尽快处理；\\n- 希望处理人员主动联系员工确认处理进度（手机号可在员工通讯录查询）；\\n- 若今天上午仍无法解决，请优先安排备用电脑，以免影响客户演示。\", \"category\": \"IT\", \"priority\": \"urgent\"}",
           "result": {
             "ok": true,
             "ticket": {
               "ticket_id": "T1014",
-              "title": "办公电脑无法开机（按电源键屏幕亮一下即黑），影响下午两点客户方案演示",
-              "description": "今早到公司发现办公电脑无法正常启动：按电源键后屏幕只亮一下又黑掉。已排查：更换电源线、换插座、长按电源键强制重启、与同事电脑交换显示器测试，确认显示器本身无问题，故障疑似在主机侧。\n\n紧急程度说明：今天下午 14:00 需为客户做方案演示，会议文件在该电脑内，属于影响客户演示的紧急问题，请优先处理。\n\n诉求：\n1. 请尽快安排 IT 上门检修；\n2. 请处理人主动联系我确认处理进度（手机号可在员工通讯录查询）；\n3. 若今天上午无法修复，请优先安排备用电脑，以保障下午演示。",
+              "title": "办公电脑无法开机（按电源键屏幕亮一下即黑屏），影响下午两点客户方案演示",
+              "description": "【紧急·影响客户演示】员工今早到公司后发现办公电脑无法正常启动：按电源键后屏幕只亮一下又黑掉。\n\n员工已自行排查：\n1. 更换电源线；\n2. 换用另一个插座；\n3. 长按电源键强制重启；\n4. 与同事电脑交换显示器测试，确认显示器本身无故障。\n\n诉求：\n- 电脑内有下午两点客户方案演示所需文件，情况紧急，请尽快处理；\n- 希望处理人员主动联系员工确认处理进度（手机号可在员工通讯录查询）；\n- 若今天上午仍无法解决，请优先安排备用电脑，以免影响客户演示。",
               "status": "open",
               "priority": "urgent",
               "category": "IT",
               "requester_id": "E005",
               "assignee_id": null,
-              "created_at": "2026-11-11 15:18",
-              "updated_at": "2026-11-11 15:18",
+              "created_at": "2026-11-12 16:24",
+              "updated_at": "2026-11-12 16:24",
               "escalated_at": null,
               "escalation_reason": null,
               "requester_name": "陈磊",
@@ -1357,11 +1413,11 @@
           }
         }
       ],
-      "latency_ms": 5217.341499999975,
+      "latency_ms": 5903.455299994675,
       "token_usage": {
-        "prompt_tokens": 2915,
-        "completion_tokens": 584,
-        "total_tokens": 3499,
+        "prompt_tokens": 3047,
+        "completion_tokens": 679,
+        "total_tokens": 3726,
         "llm_calls": 3
       },
       "llm_calls": [
@@ -1369,25 +1425,25 @@
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 567,
-          "completion_tokens": 29,
-          "latency_ms": 580.8603000000403
+          "prompt_tokens": 592,
+          "completion_tokens": 81,
+          "latency_ms": 1357.7130000048783
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 882,
-          "completion_tokens": 264,
-          "latency_ms": 1952.7307999999266
+          "prompt_tokens": 907,
+          "completion_tokens": 322,
+          "latency_ms": 2147.542400009115
         },
         {
           "model": "deepseek-flash",
           "served_by": "deepseek",
           "degraded": false,
-          "prompt_tokens": 1466,
-          "completion_tokens": 291,
-          "latency_ms": 2677.8205000000526
+          "prompt_tokens": 1548,
+          "completion_tokens": 276,
+          "latency_ms": 2392.0919000083813
         }
       ],
       "fallback": false,

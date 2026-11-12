@@ -238,7 +238,10 @@ def _failure_reasons(record: dict[str, Any]) -> list[str]:
     if record["checks"]["tool_ok"] is False:
         reasons.append("tool_mismatch")
     if record["checks"]["retrieval_ok"] is False:
-        reasons.append("retrieval_mismatch")
+        # 只写 retrieval_mismatch 会让人以为"检索没命中"，
+        # 实际也可能是召回了但模型拒答。带上 fallback_reason 才能区分。
+        detail = record.get("fallback_reason") or "no_citation"
+        reasons.append(f"retrieval_mismatch({detail})")
     return reasons
 
 
