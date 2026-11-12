@@ -15,6 +15,7 @@ python-dotenv>=1.0
 
 # --- 演示前端 ---
 streamlit>=1.40
+requests>=2.31
 
 # --- RAG：向量库 + 关键词检索 ---
 chromadb>=0.5.20
