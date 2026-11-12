@@ -7,6 +7,7 @@ MIN_SCORE 不是拍脑袋定的：2026-11-11 用真实语料实测，
 from __future__ import annotations
 
 import hashlib
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -16,6 +17,12 @@ from app.rag.vector_store import query
 MIN_SCORE = 0.55
 MAX_KEPT = 4
 TOP_K = 6  # 先多召回，再过滤：召回少了就没得筛
+
+# 复合问句拆分：「申请生产数据库权限需要谁审批，权限有效多久？」
+# 整体做 embedding 时，向量会被两个诉求平均掉，"权限有效期"章节进不了 top-k。
+SPLIT_PATTERN = re.compile(r"[，。；？！,;?!]+")
+MIN_SUBQUERY_LEN = 4   # 太短的子句（如"在吗"）单独检索只会引入噪声
+MAX_SUBQUERIES = 3     # 一句话最多拆三段，避免 embedding 调用次数失控
 
 
 @dataclass(frozen=True)
@@ -54,17 +61,44 @@ def index_is_stale(chunks: list[Any], manifest: dict[str, Any] | None) -> bool:
     return content_hash(chunks) != manifest.get("hash")
 
 
+def split_question(question: str) -> list[str]:
+    """把复合问句拆成子问题；没有标点时原样返回。"""
+    parts = [p.strip() for p in SPLIT_PATTERN.split(question)]
+    parts = [p for p in parts if len(p) >= MIN_SUBQUERY_LEN]
+    if not parts:
+        stripped = question.strip()
+        return [stripped] if stripped else []
+    return parts[:MAX_SUBQUERIES]
+
+
 def retrieve(
     question: str,
     top_k: int = TOP_K,
     min_score: float = MIN_SCORE,
+    max_kept: int = MAX_KEPT,
 ) -> list[Hit]:
-    raw = query(embed_one(question), top_k=top_k)
-    hits = [
-        Hit(text=r["text"], metadata=r["metadata"], score=float(r["score"]))
-        for r in raw
-    ]
-    return select_hits(hits, min_score=min_score)
+    """先拆子问题逐个检索，再按 (policy_id, section) 去重合并。
+
+    同一章节被多个子问题召回时保留高分那一次；合并后整体排序截断，
+    所以不会因为多查几次就把无关内容塞进上下文。
+    """
+    sub_questions = split_question(question)
+    if not sub_questions:
+        return []
+
+    best: dict[tuple[str, str], Hit] = {}
+    for sub in sub_questions:
+        for r in query(embed_one(sub), top_k=top_k):
+            hit = Hit(
+                text=r["text"],
+                metadata=r["metadata"],
+                score=float(r["score"]),
+            )
+            key = (hit.metadata["policy_id"], hit.metadata["section"])
+            if key not in best or hit.score > best[key].score:
+                best[key] = hit
+
+    return select_hits(list(best.values()), min_score=min_score, max_kept=max_kept)
 
 
 def build_citations(hits: list[Hit]) -> list[dict[str, Any]]:

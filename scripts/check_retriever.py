@@ -17,6 +17,7 @@ from app.rag.retriever import (  # noqa: E402
     content_hash,
     index_is_stale,
     select_hits,
+    split_question,
 )
 
 
@@ -65,12 +66,26 @@ def check_staleness() -> None:
     assert index_is_stale(changed, manifest), "内容变了但块数没变，也应判定为过期"
 
 
+def check_split_compound() -> None:
+    parts = split_question("申请生产数据库权限需要谁审批，权限有效多久？")
+    assert parts == ["申请生产数据库权限需要谁审批", "权限有效多久"], (
+        f"复合问句应拆成两段，实际 {parts}"
+    )
+
+
+def check_split_drops_short() -> None:
+    assert split_question("报销怎么走？嗯") == ["报销怎么走"], "过短子句应被丢弃"
+    assert split_question("年假有几天") == ["年假有几天"], "无标点时应原样返回"
+
+
 CHECKS = [
     ("空输入返回空", check_empty),
     ("低分被过滤", check_threshold),
     ("结果按分数降序", check_order),
     ("最多保留 4 条", check_limit),
     ("内容变了但条数没变 → 索引过期", check_staleness),
+    ("复合问句拆分", check_split_compound),
+    ("短子句丢弃 / 无标点原样", check_split_drops_short),
 ]
 
 
