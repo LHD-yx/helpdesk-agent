@@ -102,15 +102,26 @@ def retrieve(
 
 
 def build_citations(hits: list[Hit]) -> list[dict[str, Any]]:
-    """引用来自检索结果，不来自模型记忆。"""
-    return [
-        {
-            "policy_id": h.metadata["policy_id"],
-            "title": h.metadata["title"],
-            "section": h.metadata["section"],
-            "source_file": h.metadata["source_file"],
-            "snippet": h.text.split("\n\n", 1)[-1][:120],
-            "score": round(h.score, 3),
-        }
-        for h in hits
-    ]
+    """引用来自检索结果，不来自模型记忆。
+
+    用 .get 而不是下标：索引可能是在旧版切片器下建的，元数据字段不一定齐全。
+    缺 title/section 不该让整个请求 500；缺 policy_id 则直接丢弃——
+    没有政策编号的引用无法溯源，留着只会误导。
+    """
+    citations: list[dict[str, Any]] = []
+    for h in hits:
+        meta = h.metadata or {}
+        policy_id = meta.get("policy_id")
+        if not policy_id:
+            continue
+        citations.append(
+            {
+                "policy_id": policy_id,
+                "title": meta.get("title", ""),
+                "section": meta.get("section", ""),
+                "source_file": meta.get("source_file", ""),
+                "snippet": h.text.split("\n\n", 1)[-1][:120],
+                "score": round(h.score, 3),
+            }
+        )
+    return citations
