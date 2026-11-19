@@ -32,13 +32,7 @@ SYSTEM_PROMPT = """你是企业服务台的意图分类器。只输出 JSON，�
 - 只有泛泛表达不满、没有工单操作请求时，才选 handoff。
 
 输出格式：
-{"intent": "<policy_qa|ticket_op|handoff>", "confidence": <0到1的小数>, "reason": "<不超过20字>", "standalone_query": "<改写后的独立问句>"}
-
-standalone_query 规则：
-- 把当前问题改写成不依赖上下文、单独看也能理解的问句。
-- 如果提供了【最近对话】，用它消解"它 / 那个 / 刚才说的"等指代。
-- 如果没有提供最近对话，或当前问题本身已经独立，就原样返回当前问题。
-- 只做分类与改写，不要回答问题。
+{"intent": "<policy_qa|ticket_op|handoff>", "confidence": <0到1的小数>, "reason": "<不超过20字>"}
 
 示例：
 用户：报销流程是什么
@@ -51,6 +45,20 @@ standalone_query 规则：
 输出：{"intent": "handoff", "confidence": 0.9, "reason": "情绪激动要求人工"}
 用户：T1010 已经关了，我还是不满意，帮我再升级一下
 输出：{"intent": "ticket_op", "confidence": 0.92, "reason": "要求升级指定工单"}
+"""
+
+# 只在「有历史」时追加。首轮不追加，保证单轮 prompt 与 A 之前完全一致——
+# 实测追加这段会改变单轮分类（E17 从 handoff 漂成 policy_qa）。
+COREFERENCE_RULES = """
+
+本次输入包含【最近对话】，输出格式增加一个字段：
+{"intent": "<policy_qa|ticket_op|handoff>", "confidence": <0到1的小数>, "reason": "<不超过20字>", "standalone_query": "<改写后的独立问句>"}
+
+standalone_query 规则：
+- 把当前问题改写成不依赖上下文、单独看也能理解的问句。
+- 用【最近对话】消解"它 / 那个 / 刚才说的"等指代。
+- 如果当前问题本身已经独立，就原样返回当前问题。
+- 只做分类与改写，不要回答问题。
 """
 
 
@@ -128,13 +136,15 @@ def classify(message: str, history: list[Turn] | None = None) -> IntentResult:
     history_text = _history_text(history)
     if history_text:
         user_content = f"【最近对话】\n{history_text}\n\n【当前问题】\n{message}"
+        system_content = SYSTEM_PROMPT + COREFERENCE_RULES
     else:
-        # 首轮保持原样，避免改变已有单轮行为。
+        # 首轮保持原样：prompt 与 user content 都不变，单轮行为零漂移。
         user_content = message
+        system_content = SYSTEM_PROMPT
 
     resp = get_llm_service().chat(
         [
-            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "system", "content": system_content},
             {"role": "user", "content": user_content},
         ],
         temperature=0.0,
