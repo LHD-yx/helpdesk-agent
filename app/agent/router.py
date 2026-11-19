@@ -12,6 +12,7 @@ import re
 from pydantic import BaseModel, Field, ValidationError
 
 from app.llm import get_llm_service
+from app.memory.session_store import Turn
 from app.schemas import Intent
 
 # 低于这个值就转人工。调它之前先用评测集看准确率，别凭感觉。
@@ -31,7 +32,13 @@ SYSTEM_PROMPT = """你是企业服务台的意图分类器。只输出 JSON，�
 - 只有泛泛表达不满、没有工单操作请求时，才选 handoff。
 
 输出格式：
-{"intent": "<policy_qa|ticket_op|handoff>", "confidence": <0到1的小数>, "reason": "<不超过20字>"}
+{"intent": "<policy_qa|ticket_op|handoff>", "confidence": <0到1的小数>, "reason": "<不超过20字>", "standalone_query": "<改写后的独立问句>"}
+
+standalone_query 规则：
+- 把当前问题改写成不依赖上下文、单独看也能理解的问句。
+- 如果提供了【最近对话】，用它消解"它 / 那个 / 刚才说的"等指代。
+- 如果没有提供最近对话，或当前问题本身已经独立，就原样返回当前问题。
+- 只做分类与改写，不要回答问题。
 
 示例：
 用户：报销流程是什么
@@ -53,6 +60,8 @@ class IntentResult(BaseModel):
     intent: Intent
     confidence: float = Field(ge=0.0, le=1.0)
     reason: str = ""
+    # 指代消解后的独立问句；为空时调用方回退到原始 message。
+    standalone_query: str = ""
 
     # 可观测性：谁服务的、有没有降级、花了多少 token
     served_by: str = ""
@@ -98,16 +107,35 @@ def apply_policy(result: IntentResult) -> IntentResult:
             intent=Intent.HANDOFF,
             confidence=result.confidence,
             reason=f"低置信度 {result.confidence:.2f}，原判 {result.intent.value}",
+            standalone_query=result.standalone_query,
         )
     return result
 
 
-def classify(message: str) -> IntentResult:
-    """一次 LLM 调用，返回校验过、且过了兜底策略的意图。"""
+def _history_text(history: list[Turn] | None, max_messages: int = 6) -> str:
+    """把最近对话压成几行文本。每条截断，避免历史把 prompt 撑爆。"""
+    if not history:
+        return ""
+    lines = []
+    for turn in history[-max_messages:]:
+        speaker = "用户" if turn.role == "user" else "助手"
+        lines.append(f"{speaker}：{turn.content[:200]}")
+    return "\n".join(lines)
+
+
+def classify(message: str, history: list[Turn] | None = None) -> IntentResult:
+    """一次 LLM 调用：同时做「指代消解 + 意图分类」，不额外增加往返。"""
+    history_text = _history_text(history)
+    if history_text:
+        user_content = f"【最近对话】\n{history_text}\n\n【当前问题】\n{message}"
+    else:
+        # 首轮保持原样，避免改变已有单轮行为。
+        user_content = message
+
     resp = get_llm_service().chat(
         [
             {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": message},
+            {"role": "user", "content": user_content},
         ],
         temperature=0.0,
         response_format={"type": "json_object"},
