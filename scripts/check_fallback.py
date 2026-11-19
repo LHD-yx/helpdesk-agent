@@ -52,7 +52,8 @@ def check_policy_no_hit() -> None:
 def check_orchestrator_passthrough() -> None:
     original_classify = orchestrator.classify
     original_policy_answer = orchestrator.policy_answer
-    orchestrator.classify = lambda _message: IntentResult(
+    # 路由已支持 history（多轮记忆），测试桩也要跟着改签名。
+    orchestrator.classify = lambda _message, _history=None: IntentResult(
         intent=Intent.POLICY_QA,
         confidence=0.93,
         reason="询问公司政策",

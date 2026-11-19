@@ -31,7 +31,9 @@ class ChatRequest(BaseModel):
     """一次对话请求。"""
 
     message: str = Field(min_length=1, max_length=2000)
-    session_id: str = Field(default="default", max_length=64)
+    # 空 = 无状态、不共享记忆。绝不能给一个共享默认值，
+    # 否则所有匿名用户会共用同一份历史（串号 + 数据泄漏）。
+    session_id: str = Field(default="", max_length=64)
 
 
 class Citation(BaseModel):
