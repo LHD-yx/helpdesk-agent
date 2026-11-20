@@ -10,19 +10,60 @@ handle() 额外负责：生成 request_id、计时、汇总各层降级与 token
 
 from __future__ import annotations
 
+import json
 from time import perf_counter
+from typing import Any
 
 from app.agent.policy_qa import answer as policy_answer
 from app.agent.router import classify
 from app.agent.ticket_ops import run_tool_loop
 from app.memory.session_store import SessionStore
 from app.observability.logger import get_logger, log_event, new_request_id
-from app.schemas import ChatResponse, Citation, Intent
+from app.schemas import ChatResponse, Citation, Intent, Step
 
 logger = get_logger("orchestrator")
 
 # 进程内单例。多 worker 部署时不共享——这条写进 README 的已知限制。
 memory = SessionStore()
+
+
+def _tool_step(call: dict[str, Any]) -> Step:
+    """把一条工具调用翻译成给人看的一步。"""
+    name = call.get("name", "unknown")
+    raw_args = call.get("arguments") or "{}"
+    try:
+        args = json.loads(raw_args) if isinstance(raw_args, str) else dict(raw_args)
+    except (json.JSONDecodeError, TypeError, ValueError):
+        args = {}
+    result = call.get("result") or {}
+    ok = bool(result.get("ok", True))
+
+    if name == "get_ticket":
+        tid = args.get("ticket_id", "?")
+        if ok:
+            ticket = result.get("ticket", {})
+            return Step(
+                action=name,
+                detail=f"查询工单 {tid}：{ticket.get('status', '?')} / 优先级 {ticket.get('priority', '?')}",
+            )
+        return Step(action=name, detail=f"查询工单 {tid}：{result.get('message', '未找到')}", ok=False)
+
+    if name == "create_ticket":
+        if ok:
+            ticket = result.get("ticket", {})
+            return Step(
+                action=name,
+                detail=f"新建工单 {ticket.get('ticket_id', '?')}：{ticket.get('title', '')[:20]}",
+            )
+        return Step(action=name, detail=f"新建工单失败：{result.get('message', '')}", ok=False)
+
+    if name == "escalate_ticket":
+        tid = args.get("ticket_id", "?")
+        if ok:
+            return Step(action=name, detail=f"升级工单 {tid}：优先级提升为 high")
+        return Step(action=name, detail=f"升级工单 {tid} 失败：{result.get('message', '')}", ok=False)
+
+    return Step(action=name, detail=f"调用工具 {name}", ok=ok)
 
 
 def handle_with_trace(
@@ -51,6 +92,7 @@ def handle_with_trace(
 
     citations: list[Citation] = []
     tool_trace: list[dict] = []
+    steps: list[Step] = []
     served_by = route.served_by
     degraded = route.degraded
     prompt_tokens = route.prompt_tokens
@@ -60,6 +102,7 @@ def handle_with_trace(
 
     if route.intent is Intent.HANDOFF:
         answer = f"这个问题需要人工协助，已为你转接。触发原因：{route.reason}"
+        steps = [Step(action="handoff", detail=f"转人工：{route.reason or '模型判断不适合自动作答'}")]
     elif route.intent is Intent.TICKET_OP:
         # 工具循环：模型选工具 → 执行 → 结果回灌 → 生成答案。
         tool_result = run_tool_loop(query)
@@ -69,6 +112,7 @@ def handle_with_trace(
         degraded = degraded or bool(tool_result.get("degraded"))
         prompt_tokens += tool_result.get("prompt_tokens", 0)
         completion_tokens += tool_result.get("completion_tokens", 0)
+        steps = [_tool_step(call) for call in tool_trace]
     else:
         result = policy_answer(query)
         answer = result.answer
@@ -79,6 +123,21 @@ def handle_with_trace(
         degraded = degraded or result.degraded
         prompt_tokens += result.prompt_tokens
         completion_tokens += result.completion_tokens
+        if citations:
+            steps = [
+                Step(
+                    action="retrieve_policy",
+                    detail=f"检索政策库：命中 {len(citations)} 段，生成带引用回答",
+                )
+            ]
+        else:
+            steps = [
+                Step(
+                    action="retrieve_policy",
+                    detail="检索政策库：没有找到可引用的依据，转人工",
+                    ok=False,
+                )
+            ]
 
     if use_memory:
         # 存用户原话，不存改写后的问句——下一轮的上下文才是真实对话。
@@ -109,6 +168,7 @@ def handle_with_trace(
         confidence=route.confidence,
         session_id=sid or f"anon-{request_id}",
         citations=citations,
+        steps=steps,
         request_id=request_id,
         served_by=served_by,
         degraded=degraded,
@@ -122,6 +182,7 @@ def handle_with_trace(
         "standalone_query": query,
         "history_turns": len(history),
         "tool_calls": tool_trace,
+        "steps": [step.model_dump() for step in steps],
         "fallback": fallback,
         "fallback_reason": fallback_reason,
         "latency_ms": round(latency_ms, 1),

@@ -43,6 +43,13 @@ def render_answer(data: dict, elapsed_ms: float) -> None:
 
     st.markdown(data.get("answer", ""))
 
+    steps = data.get("steps") or []
+    if steps:
+        with st.status(f"执行过程（{len(steps)} 步）", state="complete", expanded=True):
+            for i, step in enumerate(steps, 1):
+                icon = "✓" if step.get("ok", True) else "✗"
+                st.write(f"{icon} **{i}. {step.get('action', '')}** — {step.get('detail', '')}")
+
     cols = st.columns(4)
     cols[0].metric("意图", INTENT_LABELS.get(intent, intent))
     cols[1].metric("置信度", f"{data.get('confidence', 0):.2f}")
@@ -80,7 +87,7 @@ with st.sidebar:
 
     with st.expander("已知限制"):
         st.markdown(
-            "- 多轮记忆未实现：每次提问独立处理\n"
+            "- 多轮记忆为进程内存储：3 轮窗口、30 分钟过期，重启后清空\n"
             "- 提交人固定为 E005（陈磊），真实系统应取自登录态\n"
             "- 政策库只有 4 份文档，覆盖范围有限\n"
             "- `deepseek-flash` 单次延迟约 2–4 秒"

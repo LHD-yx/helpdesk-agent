@@ -47,6 +47,18 @@ class Citation(BaseModel):
     score: float
 
 
+class Step(BaseModel):
+    """一次执行动作。给前端展示「它做了什么」，而不是只给一段答案。
+
+    action 用工具名或动作名（get_ticket / retrieve_policy / handoff），
+    detail 是人话摘要，ok=false 表示这一步失败了。
+    """
+
+    action: str
+    detail: str
+    ok: bool = True
+
+
 class ChatResponse(BaseModel):
     """一次对话响应。"""
 
@@ -55,6 +67,7 @@ class ChatResponse(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     session_id: str
     citations: list[Citation] = Field(default_factory=list)
+    steps: list[Step] = Field(default_factory=list)
 
     # ---- 可观测性：一次请求的身份与健康状态 ----
     request_id: str = ""
