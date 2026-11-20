@@ -86,21 +86,44 @@ def _strip_fences(text: str) -> str:
     return match.group(1).strip() if match else text
 
 
+def _first_json_object(text: str) -> dict | None:
+    """模型偶尔会连吐两个 JSON 对象，导致 json.loads 报 Extra data。
+
+    从第一个 '{' 开始只解析一个对象，其余内容丢弃。解析不出对象就返回 None，
+    由调用方走转人工——不在这里假装成功。
+    """
+    start = text.find("{")
+    if start < 0:
+        return None
+    try:
+        obj, _ = json.JSONDecoder().raw_decode(text[start:])
+    except json.JSONDecodeError:
+        return None
+    return obj if isinstance(obj, dict) else None
+
+
+def _handoff(reason: str) -> IntentResult:
+    return IntentResult(intent=Intent.HANDOFF, confidence=0.0, reason=reason)
+
+
 def parse_result(raw: str) -> IntentResult:
     """把模型原始输出解析成 IntentResult；解析失败就转人工。
 
     只抓"输入数据不合规"这两类异常。自己的 TypeError / NameError 应该原样抛出，
     否则真 bug 会被伪装成"模型又抽风了"。
     """
+    text = _strip_fences(raw)
     try:
-        data = json.loads(_strip_fences(raw))
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        data = _first_json_object(text)
+        if data is None:
+            return _handoff(f"路由解析失败：{exc}")
+
+    try:
         return IntentResult.model_validate(data)
-    except (json.JSONDecodeError, ValidationError) as exc:
-        return IntentResult(
-            intent=Intent.HANDOFF,
-            confidence=0.0,
-            reason=f"路由解析失败：{exc}",
-        )
+    except ValidationError as exc:
+        return _handoff(f"路由解析失败：{exc}")
 
 
 def apply_policy(result: IntentResult) -> IntentResult:
