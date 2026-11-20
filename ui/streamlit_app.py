@@ -118,6 +118,8 @@ with st.sidebar:
             st.error(f"查询失败：{type(exc).__name__}")
     for row in st.session_state.get("handoffs", []):
         st.write(f"`{row['handoff_id']}` {row['reason'][:20]}")
+    if st.session_state.get("handoffs") == []:
+        st.caption("暂无待处理交接单")
 
 with st.form("ask"):
     message = st.text_input("你想问什么？", placeholder="例如：出差住宿能报多少钱？")
