@@ -14,6 +14,7 @@
 DROP TABLE IF EXISTS tickets;
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS policies;
+DROP TABLE IF EXISTS handoffs;
 
 -- ============================================================ 员工
 CREATE TABLE employees (
@@ -86,3 +87,26 @@ CREATE TABLE policies (
 );
 
 -- policies 只有几行，全表扫描比走索引还快，所以故意不建索引。
+
+-- ============================================================ 人工交接单
+-- “转人工”不能只返回一句话：用户关掉页面后，这次交接就消失了。
+-- 这张表把每次转人工落成一条可查询的记录，人工侧凭 status 拉待处理列表。
+-- source 区分两种成因：
+--   route    路由层直接判为 handoff（超范围 / 投诉 / 低置信度）
+--   fallback 进入了政策分支，但检索不到依据
+CREATE TABLE handoffs (
+    handoff_id TEXT PRIMARY KEY,               -- H0001
+    session_id TEXT NOT NULL,
+    message    TEXT NOT NULL,                  -- 用户原话
+    reason     TEXT NOT NULL,                  -- 触发原因（人读得懂）
+    source     TEXT NOT NULL
+               CHECK (source IN ('route', 'fallback')),
+    intent     TEXT NOT NULL,                  -- 原路由意图
+    context    TEXT NOT NULL DEFAULT '[]',     -- 最近几轮对话 JSON
+    status     TEXT NOT NULL DEFAULT 'pending'
+               CHECK (status IN ('pending', 'claimed', 'closed')),
+    created_at TEXT NOT NULL
+);
+
+-- 人工侧最常见的查询：按状态拉最新待处理
+CREATE INDEX idx_handoffs_status ON handoffs(status, created_at);

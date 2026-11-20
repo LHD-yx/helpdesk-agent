@@ -11,9 +11,11 @@ handle() 额外负责：生成 request_id、计时、汇总各层降级与 token
 from __future__ import annotations
 
 import json
+import sqlite3
 from time import perf_counter
 from typing import Any
 
+from app.agent.handoff import create_handoff
 from app.agent.policy_qa import answer as policy_answer
 from app.agent.router import classify
 from app.agent.ticket_ops import run_tool_loop
@@ -144,6 +146,36 @@ def handle_with_trace(
         memory.append(sid, "user", message)
         memory.append(sid, "assistant", answer)
 
+    # 转人工不能止于一句提示：落一条交接单，人工侧才能真的接手。
+    handoff_id = ""
+    if route.intent is Intent.HANDOFF or fallback:
+        source = "route" if route.intent is Intent.HANDOFF else "fallback"
+        reason = route.reason if source == "route" else (fallback_reason or "unknown")
+        try:
+            record = create_handoff(
+                session_id=sid or f"anon-{request_id}",
+                message=message,
+                reason=reason or "未提供原因",
+                source=source,
+                intent=route.intent.value,
+                context=[
+                    {"role": turn.role, "content": turn.content} for turn in history
+                ],
+            )
+            handoff_id = record["handoff_id"]
+            steps.append(
+                Step(action="handoff_record", detail=f"生成交接单 {handoff_id}，等待人工接手")
+            )
+            log_event(
+                logger, "handoff_created",
+                request_id=request_id, handoff_id=handoff_id, source=source,
+            )
+        except sqlite3.Error as exc:
+            # 交接单写失败不该让用户拿不到回答；但必须留下告警，不能静默。
+            log_event(
+                logger, "handoff_failed", request_id=request_id, error=str(exc)[:200]
+            )
+
     latency_ms = (perf_counter() - started) * 1000
     log_event(
         logger, "chat_done",
@@ -174,6 +206,7 @@ def handle_with_trace(
         degraded=degraded,
         fallback=fallback,
         fallback_reason=fallback_reason,
+        handoff_id=handoff_id,
     )
     trace = {
         "request_id": request_id,
@@ -185,6 +218,7 @@ def handle_with_trace(
         "steps": [step.model_dump() for step in steps],
         "fallback": fallback,
         "fallback_reason": fallback_reason,
+        "handoff_id": handoff_id,
         "latency_ms": round(latency_ms, 1),
     }
     return response, trace

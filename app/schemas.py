@@ -59,6 +59,25 @@ class Step(BaseModel):
     ok: bool = True
 
 
+class HandoffRecord(BaseModel):
+    """人工交接单（列表视图，不含对话上下文）。"""
+
+    handoff_id: str
+    session_id: str
+    message: str
+    reason: str
+    source: str      # route | fallback
+    intent: str
+    status: str      # pending | claimed | closed
+    created_at: str
+
+
+class HandoffDetail(HandoffRecord):
+    """单条交接单详情，带最近几轮对话，供人工接手时看上下文。"""
+
+    context: list[dict] = Field(default_factory=list)
+
+
 class ChatResponse(BaseModel):
     """一次对话响应。"""
 
@@ -75,6 +94,7 @@ class ChatResponse(BaseModel):
     degraded: bool = False   # 本次请求中是否发生过降级（任一环节）
     fallback: bool = False
     fallback_reason: str = ""
+    handoff_id: str = ""     # 有值表示本次已生成交接单
 
 
 class HealthResponse(BaseModel):

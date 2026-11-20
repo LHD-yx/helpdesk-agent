@@ -48,6 +48,10 @@ def render_answer(data: dict, elapsed_ms: float) -> None:
         reason = data.get("fallback_reason") or ""
         st.warning(f"本次发生了降级：{FALLBACK_LABELS.get(reason, reason or '未知原因')}")
 
+    handoff_id = data.get("handoff_id")
+    if handoff_id:
+        st.markdown(f"**交接单号：`{handoff_id}`**（人工侧可查，含最近对话上下文）")
+
     st.markdown(data.get("answer", ""))
 
     steps = data.get("steps") or []
@@ -99,6 +103,21 @@ with st.sidebar:
             "- 政策库只有 4 份文档，覆盖范围有限\n"
             "- `deepseek-flash` 单次延迟约 2–4 秒"
         )
+
+    st.divider()
+    st.caption("人工侧入口")
+    if st.button("刷新待处理交接单"):
+        try:
+            rows = requests.get(
+                f"{API_BASE}/handoffs",
+                params={"status": "pending", "limit": 10},
+                timeout=5,
+            ).json()
+            st.session_state["handoffs"] = rows
+        except Exception as exc:  # 侧栏只做提示，不中断主流程
+            st.error(f"查询失败：{type(exc).__name__}")
+    for row in st.session_state.get("handoffs", []):
+        st.write(f"`{row['handoff_id']}` {row['reason'][:20]}")
 
 with st.form("ask"):
     message = st.text_input("你想问什么？", placeholder="例如：出差住宿能报多少钱？")

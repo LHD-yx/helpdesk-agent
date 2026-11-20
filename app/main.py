@@ -12,11 +12,18 @@ import time
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 
+from app.agent.handoff import get_handoff, list_handoffs
 from app.agent.orchestrator import handle
 from app.config import BASE_DIR, get_settings
 from app.llm import get_llm_service
 from app.llm.base import LLMRequestError, LLMUnavailableError
-from app.schemas import ChatRequest, ChatResponse, HealthResponse
+from app.schemas import (
+    ChatRequest,
+    ChatResponse,
+    HandoffDetail,
+    HandoffRecord,
+    HealthResponse,
+)
 
 
 class UTF8JSONResponse(JSONResponse):
@@ -99,3 +106,24 @@ def health(
 def chat(req: ChatRequest) -> ChatResponse:
     """一次对话。D1 只做路由 + 桩分支，不接检索和工具。"""
     return handle(req.message, req.session_id)
+
+
+@app.get("/handoffs", response_model=list[HandoffRecord])
+def handoffs(
+    status: str | None = Query(None, description="pending / claimed / closed"),
+    limit: int = Query(20, ge=1, le=200),
+) -> list[HandoffRecord]:
+    """人工侧入口：按状态拉交接单，最新的在前。"""
+    try:
+        return list_handoffs(status=status, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/handoffs/{handoff_id}", response_model=HandoffDetail)
+def handoff_detail(handoff_id: str) -> HandoffDetail:
+    """单条详情：带最近几轮对话，人工接手前先看上下文。"""
+    record = get_handoff(handoff_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"交接单 {handoff_id} 不存在")
+    return HandoffDetail(**record)

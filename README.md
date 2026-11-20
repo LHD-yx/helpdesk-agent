@@ -28,6 +28,9 @@ FastAPI + Streamlit + SQLite + Chroma，模型走 OpenAI 兼容接口（默认 D
 `/chat` 的响应里带 `steps` 字段，记录这次实际做了哪几步（查工单 / 升级工单 / 检索政策 / 转人工），
 前端会把它渲染成「执行过程」，而不是只显示一段文字。
 
+转人工也不是一句提示：每次转人工都会落一条**交接单**（`handoffs` 表），
+带会话号、原始问题、触发原因和最近几轮上下文，人工侧可通过 `GET /handoffs` 拉待处理列表。
+
 ## 快速开始
 
 需要 conda（或任意 Python 3.11 环境）与两个可用的 API key。
@@ -88,6 +91,21 @@ python evals\run_multistep.py
 
 预期：`多步任务通过 2/2`——验证模型能连续调用两个工具并汇总结果
 （例如「T1004 一直没人处理，帮我升级，然后告诉我处理人是谁」）。
+
+### 2.2 人工交接单
+
+```powershell
+python scripts\check_handoff.py
+```
+
+预期：`通过 7/7`。服务启动后可查：
+
+```powershell
+Invoke-RestMethod "http://127.0.0.1:8000/handoffs?status=pending" | ConvertTo-Json
+Invoke-RestMethod "http://127.0.0.1:8000/handoffs/H0001" | ConvertTo-Json
+```
+
+前者是人工侧待处理列表，后者是单条详情（含最近对话上下文）。
 
 ### 3. 离线自检（不花钱）
 
@@ -152,6 +170,7 @@ python evals\run_eval.py
 | 无依据时可能附带相近政策 | 问「育儿假」这类政策库不覆盖的问题时，模型有时会顺带引用年假条款（P002），可能造成误导 |
 | 单用户身份写死 | 工单提交人固定 `E005`，真实系统应取自登录态 |
 | 无鉴权与限流 | 内网演示定位，未做权限系统 |
+| 无人工坐席端 | 交接单已落库并提供查询接口，但没有坐席接单界面、分配与通知 |
 | 无容器化 | 未提供 Dockerfile，按本文档本地运行 |
 | 延迟偏高 | P95 约 5.3s，主要来自一次请求内的多次 LLM 调用（路由 + 工具循环 + 生成）；未做流式输出 |
 
@@ -163,7 +182,7 @@ app/
   schemas.py           请求 / 响应 / 引用契约
   config.py            配置层（pydantic-settings，启动即校验）
   llm/                 模型抽象、OpenAI 兼容实现、主备降级
-  agent/               意图路由、工单工具循环、政策问答、编排
+  agent/               意图路由、工单工具循环、政策问答、编排、人工交接单
   memory/              会话记忆（进程内、TTL、窗口截断）
   rag/                 切片、embedding、Chroma、检索与引用
   tools/               工单三工具 + JSON Schema 注册表
@@ -186,5 +205,6 @@ data/policies/         4 份政策原文（RAG 原料）
 | 前端 | Streamlit 走 HTTP | 演示完整链路，不用后端函数冒充前端 |
 | 会话记忆 | 进程内存 + TTL + 3 轮窗口 | 对话含工单细节，落盘要考虑加密与生命周期；两周版用内存，生产换 Redis |
 | 执行过程 | `steps` 结构化返回 | 让用户看见「它做了什么」；纯文本答案无法体现多步编排 |
+| 转人工 | 落 `handoffs` 表 + 查询接口 | 关掉页面后交接不能消失；人工侧要能拉到原始问题和上下文 |
 
 更多决策记录（含被推翻的方案）见 [docs/architecture.md](docs/architecture.md) §4。
