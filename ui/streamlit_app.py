@@ -22,6 +22,12 @@ INTENT_LABELS = {
     "handoff": "转人工",
 }
 
+FALLBACK_LABELS = {
+    "no_policy_hit": "政策库里没有检索到相关内容",
+    "no_policy_basis": "模型判断资料不足以作答",
+    "partial_no_basis": "部分问题没有政策依据",
+}
+
 
 def ask(message: str, session_id: str) -> dict:
     """走 HTTP 调用后端，返回解析后的 JSON。"""
@@ -39,7 +45,8 @@ def render_answer(data: dict, elapsed_ms: float) -> None:
     if intent == "handoff":
         st.info("已转人工：这个问题不自动作答。")
     if data.get("fallback"):
-        st.warning(f"本次发生了降级：{data.get('fallback_reason') or '未知原因'}")
+        reason = data.get("fallback_reason") or ""
+        st.warning(f"本次发生了降级：{FALLBACK_LABELS.get(reason, reason or '未知原因')}")
 
     st.markdown(data.get("answer", ""))
 
