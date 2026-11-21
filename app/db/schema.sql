@@ -1,15 +1,12 @@
 -- HelpDesk Agent · 数据层表结构
 --
--- 五条设计原则（面试要能讲出来）：
---   1. 主键用业务可读编号（E001 / T1001 / P001）——人和模型都读得懂，
---      Day4 让模型生成工具参数时，它传的就是这种编号，不需要额外查一次映射。
---   2. 时间统一存 ISO8601 文本（SQLite 没有原生日期类型），
---      格式固定为 'YYYY-MM-DD HH:MM'，字符串比较等于时间比较。
---   3. 取值有限的字段用 CHECK 收口：错别字在入库那一刻就被拒绝，
---      而不是等到 Day6 做意图路由时才发现「状态值对不上」。
---   4. 关系用外键表达，但 SQLite 的外键默认是关的 —— 见 app/db/seed.py 的 connect()。
---      注意：PRAGMA foreign_keys 不要在下面写，它在事务里是空操作，必须设在连接上。
---   5. DROP 顺序从"被引用方"往"引用方"倒着来：先删 tickets，再删 employees。
+-- 几个当时定下来的取舍：
+--   主键用业务可读编号（E001 / T1001 / P001），模型生成工具参数时直接传这个，
+--   不用再查一次映射。
+--   时间统一存 'YYYY-MM-DD HH:MM' 文本：SQLite 没有日期类型，字符串比较就是时间比较。
+--   取值有限的字段交给 CHECK，错别字在入库那一刻就被拒，不用等上层用到才发现。
+--   外键在 connect() 里打开——PRAGMA foreign_keys 写在建表语句里是空操作，必须设在连接上。
+--   DROP 从被引用方往引用方倒着删：先 tickets，再 employees。
 
 DROP TABLE IF EXISTS tickets;
 DROP TABLE IF EXISTS employees;
@@ -55,7 +52,7 @@ CREATE TABLE tickets (
     -- 为什么不只改 priority：只看 priority 分不清"创建时就填高了"还是"后来被升级了"，
     -- 而且丢了"谁在什么时候、因为什么升级的"这条信息。
     -- 局限：这里只存最近一次升级。要完整历史需要再加一张 status_history 表，
-    -- 两周版不做 —— 面试被问到就如实说这是刻意的简化。
+    -- 两周版没做，后面要补的话再加一张表。
     escalated_at      TEXT,
     escalation_reason TEXT,
 

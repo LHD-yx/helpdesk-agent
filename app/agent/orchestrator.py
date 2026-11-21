@@ -1,11 +1,8 @@
-"""主编排：路由 → 三条真实分支 → 统一响应。
+"""一次对话的主流程：取记忆 → 路由 → 走对应分支 → 汇总 → 写日志。
 
-policy_qa 接 RAG，ticket_op 接 Function Calling，handoff 直接返回人工提示。
-分支内部的降级通过 fallback / fallback_reason 传给调用方，不覆盖路由原判的
-intent，保证评测测到的是真实路由结果。
-
-handle() 额外负责：生成 request_id、计时、汇总各层降级与 token，
-并在开始 / 结束各写一条结构化日志——一次请求的所有事件靠 request_id 串起来。
+分支里的降级只往上带 fallback / fallback_reason，不改 route.intent。
+之前为了"看起来一致"改写过一次，结果评测里路由的错判全被掩盖了，
+之后就固定成现在这样。request_id 在入口生成，路由、工具、生成几段日志都靠它串。
 """
 
 from __future__ import annotations

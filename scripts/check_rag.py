@@ -53,7 +53,7 @@ def main() -> int:
         ),
     )
 
-    # W-4 的核心断言：住宿表必须完整待在某一个块里。
+    # 住宿价格表必须完整落在一个块里，否则数字会对错行。
     table_intact = any(
         "普通员工" in c.body and "800 元/晚" in c.body for c in chunks
     )

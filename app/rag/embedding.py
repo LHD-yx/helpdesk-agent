@@ -1,8 +1,7 @@
 """Embedding 客户端：硅基流动 BAAI/bge-m3（1024 维，免费）。
 
-为什么单独一个模块，而不是塞进 app/llm：
-  LLM 层抽象的是「生成」，这里抽象的是「向量化」。两者能力不同、失败模式不同。
-  混在一起会让 LLMProvider 的协议越来越宽，最后变成什么都干的上帝对象。
+单独放一个模块，是因为"生成"和"向量化"是两种能力，失败模式也不一样。
+塞进 app/llm 会让 LLMProvider 的协议越来越宽，最后什么都得管。
 """
 
 from __future__ import annotations

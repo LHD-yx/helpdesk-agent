@@ -433,7 +433,7 @@ def build_report(
         "- 延迟：单条 `handle()` 端到端耗时的 P50 / P95，nearest-rank 算法。",
         "- token：累计全链路所有 LLM 调用的 API usage；输入/输出分别求和，"
         "单条均值统一除以 20。",
-        "- 转人工率：结构化降级 `fallback == true` 条数 / 20；按任务卡口径，"
+        "- 转人工率：结构化降级 `fallback == true` 条数 / 20；按评测口径，"
         "不把路由直接判成 `handoff` 的情况混入 fallback 数量。",
         "",
         "## 五项指标",
@@ -494,7 +494,7 @@ def build_report(
         f"- 全链路 token 总量：{summary['tokens']['total']}，"
         f"单条均值 {_fmt_number(summary['tokens']['total_mean'])}。",
         "",
-        "### W-5 置信度校准观察",
+        "### 置信度校准观察",
         "",
         "模型自报 confidence 只作观察，不作为正确率替代指标。",
         "",

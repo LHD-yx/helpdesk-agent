@@ -1,9 +1,7 @@
-"""工具注册表：把 Python 函数变成模型能「看见」的 tools 声明。
+"""工具注册表。
 
-模型不认识 Python 函数，只认识 JSON Schema。这里做三件事：
-1. 声明三个工具的参数（TOOL_SCHEMAS）
-2. 名字 → 函数的映射（REGISTRY）
-3. 把模型给的参数安全地送进函数（dispatch）
+模型只认 JSON Schema，不认 Python 函数。TOOL_SCHEMAS 描述参数，
+REGISTRY 管名字到函数的映射，dispatch 把模型给的参数校验后送进去。
 """
 
 from __future__ import annotations

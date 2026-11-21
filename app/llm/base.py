@@ -1,12 +1,10 @@
-"""LLM 抽象层：定义「一个模型服务」在本项目里长什么样。
+"""LLM 抽象层。
 
-两个设计要点，也是面试可以讲的点：
+上层只认 LLMResult 和两个异常，不认 openai SDK 的类型；换供应商、
+加本地模型，改动都收在 factory 里。
 
-1. 业务代码只认识 LLMResult / LLMProvider / LLMUnavailableError，
-   不认识 openai SDK 的任何类型。以后换供应商、加本地模型，
-   业务代码一行都不用改。
-2. 把「哪些错误可以降级」收敛成两个自定义异常
-   （可降级 / 不可降级），避免业务层到处写 except openai.APIError。
+错误只分两类：服务不可用（可降级）和请求被拒绝（不可降级）。
+后者如果也降级，配错会被一次"成功"的备用响应盖住——这个坑我踩过。
 """
 
 from __future__ import annotations

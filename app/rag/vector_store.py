@@ -1,7 +1,7 @@
 """Chroma 持久化封装。
 
-只暴露四个动作：数一下、清空重建、写入、查询。
-业务层不需要知道 Chroma 的任何细节。
+对外只留 count / reset / add / query 四个函数，上层不直接碰 Chroma。
+集合用 cosine，跟 bge-m3 的用法一致。
 """
 
 from __future__ import annotations

@@ -1,7 +1,6 @@
 """Streamlit 最小演示前端。
 
-架构硬约束：只通过 HTTP 调 FastAPI，不 import 任何 app.* 代码。
-目的是演示「前端 → API → Agent」整条链路，而不是把后端当函数库直接调用。
+只走 HTTP 调 FastAPI，不 import 后端包——直接调函数的话，演示的就不是这条链路了。
 """
 
 from __future__ import annotations
